@@ -1,0 +1,55 @@
+API wersja 0.1
+
+=========
+ZAŁOŻENIA
+=========
+
+- tam gdzie to zbędne walić statusy, podczas ostatniego projektu z ich i tak nie korzystaliśmy prawie, a ułatwi to nam zdecydowanie pracę
+- nieprawidłowe jsony po prostu będziemy ignorować przez jakieś try-except
+- nicki przechowuje serwer - posiadanie nicka na serwerze będzie warunkiem, czy w ogóle akceptować głos (żeby wyeliminować podszywy)
+- klient odbiera albo całą planszę (przy czym powinna ona mieć formę tablicy 10x10, zaznaczy się na niej poszczególnymi literkami albo cyferkami status danego pola) albo wiadomość z grupy
+
+=========
+LOGOWANIE
+=========
+
+a) request
+
+{
+	"request" : "connect",
+	"nick" : "nick", 
+	"color" : "WHITE"
+}
+
+b) respons 
+
+{ "status" : "ok" # lub zajęty }
+
+====================
+WYSYŁANIE WIADOMOŚCI
+====================
+
+{
+	"request" : "message",
+	"message" : "jp2gmd"
+}
+
+=======================
+OTRZYMYWANIE WIADOMOŚCI
+=======================
+
+{
+	"message_type" : "message",
+	"time" : 14xxxxx, # timestamp (prościej)
+	"nick" : "nick"
+}
+
+==================
+ODBIERANIE PLANSZY
+==================
+
+{
+	"map" : [0,1,2,3,4, ...]
+}
+
+itd.
