@@ -6,28 +6,46 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>363</width>
-    <height>297</height>
+    <width>565</width>
+    <height>351</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Widget</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout">
+  <layout class="QHBoxLayout" name="horizontalLayout">
    <item>
-    <widget class="QPushButton" name="connectButton">
-     <property name="text">
-      <string>Connect</string>
+    <layout class="QGridLayout" name="fieldsGridLayout"/>
+   </item>
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <property name="sizeConstraint">
+      <enum>QLayout::SetMinimumSize</enum>
      </property>
-    </widget>
-   </item>
-   <item>
-    <widget class="QTextEdit" name="chatTextEdit"/>
-   </item>
-   <item>
-    <widget class="QLineEdit" name="messegeLineEdit"/>
+     <item>
+      <widget class="QPushButton" name="connectButton">
+       <property name="text">
+        <string>Connect</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QTextEdit" name="chatTextEdit">
+       <property name="minimumSize">
+        <size>
+         <width>300</width>
+         <height>0</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="messegeLineEdit"/>
+     </item>
+    </layout>
    </item>
   </layout>
+  <zorder></zorder>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>

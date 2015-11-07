@@ -23,6 +23,7 @@ private:
     QTcpSocket *sock;
     void connectToServer();
     void sendStatus();
+    void drawFields();
 };
 
 #endif // WIDGET_H

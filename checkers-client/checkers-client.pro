@@ -19,3 +19,6 @@ HEADERS  += widget.h
 
 FORMS    += widget.ui
 CONFIG += c++11
+
+RESOURCES += \
+    resources.qrc
