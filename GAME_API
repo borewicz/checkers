@@ -25,6 +25,22 @@ b) respons
 
 { "status" : "ok" # lub zajęty }
 
+===========
+WYLOGOWANIE
+===========
+
+a) request
+
+{
+	"request" : "disconnect",
+}
+
+b) respons
+
+{
+	"status" : "ok"
+}
+
 ====================
 WYSYŁANIE WIADOMOŚCI
 ====================
@@ -39,8 +55,8 @@ OTRZYMYWANIE WIADOMOŚCI
 =======================
 
 {
-	"message_type" : "message",
-	"time" : 14xxxxx, # timestamp (prościej)
+	"request" : "message",
+	"time" : "14xxxxx", # timestamp (prościej)
 	"nick" : "nick"
 }
 
@@ -49,7 +65,23 @@ ODBIERANIE PLANSZY
 ==================
 
 {
-	"map" : [0,1,2,3,4, ...]
+	"board" : ["w","_","w","_","b","_","B", ...]
+	"time" : # timestamp + czas tury, (czas zakończenia danej tury)
+}
+
+===============
+WYSYŁANIE RUCHU
+===============
+a) request
+{
+	"request" : "movement",
+	"movement" : ["0","0","1","1"]
+}
+
+b) response
+
+{
+	"status" : "ok" # "wrong move"
 }
 
 itd.

@@ -5,11 +5,11 @@
  *      Author: Sebastian
  */
 
+#include "game/Game.h"
 #include "network/TCPClientAcceptor.h"
 #include "network/TCPClientConnection.h"
 
-int main(){
-
-
-
+int main() {
+	Game game = Game();
+	game.drawGameBoard();
 }
