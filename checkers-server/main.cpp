@@ -10,6 +10,9 @@
 #include "network/TCPClientConnection.h"
 
 int main() {
-	Game game = Game();
+	int roundTime = 30;
+	Game game = Game(roundTime);
 	game.drawGameBoard();
+	game.startGame();
+	cout<<game.getActualRoundEndTime();
 }

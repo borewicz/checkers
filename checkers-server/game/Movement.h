@@ -8,18 +8,27 @@
 #ifndef GAME_MOVEMENT_H_
 #define GAME_MOVEMENT_H_
 
+#include <vector>
+
+using namespace std;
+
 class Movement {
 private:
-	int from[2];
-	int to[2];
+	vector<int> from;
+	vector<int> to;
 	char color;
+	int roundID;
+
 public:
-	int getFrom();
-	int getTo();
-	char getColor();
-	bool isEqual(Movement *movement);
-	Movement();
+	Movement(int fromY, int fromX, int toY, int toX, char color, int roundID);
 	virtual ~Movement();
+
+	bool isEqual(Movement *movement);
+
+	vector<int> getFrom();
+	vector<int> getTo();
+	int getRoundID();
+	char getColor();
 };
 
 #endif /* GAME_MOVEMENT_H_ */

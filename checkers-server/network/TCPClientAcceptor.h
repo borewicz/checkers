@@ -19,6 +19,7 @@ private:
 	string host;
 	int port;
 	bool isListening;
+
 public:
 	TCPClientAcceptor(int server_port, const char* address);
 	virtual ~TCPClientAcceptor();
