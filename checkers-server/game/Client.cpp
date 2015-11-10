@@ -13,44 +13,54 @@ Client::Client(TCPClientConnection *network, char color, string nick) {
 	this->nick = nick;
 	this->ID = network->getSock();
 	this->isConnected = false;
+	this->threadEnabled = true;
 }
 
-Client::Client(TCPClientConnection *network, char color){
+Client::Client(TCPClientConnection *network) {
 	string nick = "";
-	this->color = color;
+	this->color = ' ';
 	this->network = network;
 	this->ID = network->getSock();
 	this->isConnected = false;
+	this->threadEnabled = true;
 }
 
 Client::~Client() {
-	delete(network);
+	delete (network);
 }
 
-char Client::getColor(){
+void Client::terminateThread() {
+	threadEnabled = false;
+}
+
+bool Client::getThreadEnabled() {
+	return threadEnabled;
+}
+
+char Client::getColor() {
 	return color;
 }
 
-int Client::getID(){
+int Client::getID() {
 	return ID;
 }
 
-string Client::getNick(){
+string Client::getNick() {
 	return nick;
 }
 
-void Client::setColor(char color){
+void Client::setColor(char color) {
 	this->color = color;
 }
 
-void Client::setNick(string nick){
+void Client::setNick(string nick) {
 	this->nick = nick;
 }
 
-bool Client::getIsConnected(){
+bool Client::getIsConnected() {
 	return isConnected;
 }
 
-void Client::setIsConnected(bool connected){
+void Client::setIsConnected(bool connected) {
 	this->isConnected = connected;
 }

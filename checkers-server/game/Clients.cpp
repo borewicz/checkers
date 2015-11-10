@@ -22,24 +22,24 @@ map<int, Client*> Clients::getBlackClients() {
 	return blackClients;
 }
 
-bool Clients::addToRandomColor(TCPClientConnection *clientConnection) {
+bool Clients::addToRandomColor(Client *client) {
 	if ((whiteClients.empty() && blackClients.empty())
 			|| ((!whiteClients.empty() && !blackClients.empty()))) {
 		srand(time(NULL));
 		if (rand() % 2) {
-			Client *client = new Client(clientConnection, 'w');
-			whiteClients[clientConnection->getSock()] = client;
+			client->setColor('w');
+			whiteClients[client->getID()] = client;
 		} else {
-			Client *client = new Client(clientConnection, 'b');
-			blackClients[clientConnection->getSock()] = client;
+			client->setColor('b');
+			blackClients[client->getID()] = client;
 		}
 	} else {
 		if (whiteClients.empty()) {
-			Client *client = new Client(clientConnection, 'w');
-			whiteClients[clientConnection->getSock()] = client;
+			client->setColor('w');
+			whiteClients[client->getID()] = client;
 		} else {
-			Client *client = new Client(clientConnection, 'b');
-			blackClients[clientConnection->getSock()] = client;
+			client->setColor('b');
+			blackClients[client->getID()] = client;
 		}
 	}
 	return true;

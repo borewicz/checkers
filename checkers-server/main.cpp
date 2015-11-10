@@ -5,37 +5,34 @@
  *      Author: Sebastian
  */
 
-#include "game/Game.h"
-#include "network/TCPClientAcceptor.h"
-#include "network/TCPClientConnection.h"
-
 #include <boost/thread/thread.hpp>
 #include <iostream>
 
-void myFunc(){
+#include "game/Server.h"
 
-	for (int i=0;i<12;i++){
-		sleep(3);
-		srand( time(NULL) );
-		 //Randomize seed initialization
-			int randNum = rand()%2; // Generate a random number between 0 and 1
+void commandLine() {
+	string command;
+	while (true) {
+		cout << "Commands: start - start server\n stop - stop server\n";
+		cout << "exit - exit program\n ";
+		cin >> command;
 
-			std::cout << randNum<<endl;
+		if (command == "exit") {
+			return;
+		}
 	}
 }
 
 int main() {
 	int port = 2137;
 	const char* host = "127.0.0.1";
-
 	int roundTime = 30;
 
-	Game game = Game(roundTime);
+	Server *server = new Server(roundTime, port, host);
 
-	TCPClientAcceptor server = TCPClientAcceptor(port, host);
-	server.start();
+	boost::shared_ptr<boost::thread> thread(
+			new boost::thread(server->runAcceptor);
 
-	boost::thread t(myFunc);
-	t.join();
-
+	commandLine();
+	delete server;
 }

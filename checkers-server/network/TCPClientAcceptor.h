@@ -24,7 +24,7 @@ public:
 	TCPClientAcceptor(int server_port, const char* address);
 	virtual ~TCPClientAcceptor();
 
-	int start();
+	bool start();
 	TCPClientConnection* acceptConnection();
 };
 

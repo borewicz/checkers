@@ -22,7 +22,7 @@ public:
 	Clients();
 	virtual ~Clients();
 
-	bool addToRandomColor(TCPClientConnection *clientConnection);
+	bool addToRandomColor(Client *client);
 	bool removeClient(int ID);
 	bool nickAvailable(string nick);
 
