@@ -53,3 +53,7 @@ string TCPClientConnection::getHost() {
 int TCPClientConnection::getPort() {
 	return port;
 }
+
+int TCPClientConnection::getSock() {
+	return sock;
+}

@@ -8,19 +8,27 @@
 #ifndef GAME_CLIENTS_H_
 #define GAME_CLIENTS_H_
 
-#include <vector>
+#include <map>
 #include "Client.h"
 
 using namespace std;
 
 class Clients {
 private:
-	vector<Client> whiteClients;
-	vector<Client> blackClients;
+	map<int, Client*> whiteClients;
+	map<int, Client*> blackClients;
 
 public:
 	Clients();
 	virtual ~Clients();
+
+	bool addToRandomColor(TCPClientConnection *clientConnection);
+	bool removeClient(int ID);
+	bool nickAvailable(string nick);
+
+	map<int, Client*> getWhiteClients();
+	map<int, Client*> getBlackClients();
+
 };
 
 #endif /* GAME_CLIENTS_H_ */

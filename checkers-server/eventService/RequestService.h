@@ -21,7 +21,7 @@ public:
 	RequestService();
 	virtual ~RequestService();
 
-	virtual void action(Clients *clients, Game *game) = 0;
+	virtual bool action(string request, Clients *clients, Game *game) = 0;
 };
 
 #endif /* EVENTSERVICE_REQUESTSERVICE_H_ */

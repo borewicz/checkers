@@ -11,16 +11,20 @@
 #include <map>
 #include <string.h>
 #include "RequestService.h"
+#include "../jsonParser/json/json.h"
 
 using namespace std;
 
 class RequestManager {
 private:
-	map<string, RequestService*> requestsServices;
-public:
+	map<string, RequestService*> requestServices;
+	Json::Value root;
+	Json::Reader reader;
 
+public:
 	RequestManager();
 	virtual ~RequestManager();
+	bool requestReaction(string request, Clients *clients, Game *game);
 };
 
 #endif /* EVENTSERVICE_REQUESTMANAGER_H_ */

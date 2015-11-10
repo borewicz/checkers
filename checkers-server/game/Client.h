@@ -15,13 +15,26 @@ using namespace std;
 
 class Client {
 private:
+	int ID;
 	TCPClientConnection *network;
-	int color;
+	char color;
 	string nick;
+	bool isConnected;
 
 public:
-	Client();
+	Client(TCPClientConnection *network, char color, string nick);
+	Client(TCPClientConnection *network, char color);
 	virtual ~Client();
+
+	char getColor();
+	string getNick();
+	int getID();
+	bool getIsConnected();
+
+	void setColor(char color);
+	void setNick(string nick);
+	void setIsConnected(bool connected);
+
 };
 
 #endif /* GAME_CLIENT_H_ */
