@@ -12,6 +12,7 @@
 #include <string.h>
 #include "RequestService.h"
 #include "../jsonParser/json/json.h"
+#include "../game/Server.h"
 
 using namespace std;
 
@@ -24,7 +25,7 @@ private:
 public:
 	RequestManager();
 	virtual ~RequestManager();
-	bool requestReaction(string request, Clients *clients, Game *game);
+	bool requestReaction(string request, Server *server);
 };
 
 #endif /* EVENTSERVICE_REQUESTMANAGER_H_ */

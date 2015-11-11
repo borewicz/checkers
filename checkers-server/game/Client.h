@@ -29,6 +29,7 @@ public:
 
 	void terminateThread();
 
+	TCPClientConnection* getNetwork();
 	char getColor();
 	string getNick();
 	int getID();

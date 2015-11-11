@@ -21,21 +21,18 @@ Server::Server(int roundTime, int server_port, const char* addres) {
 	votingManager = new VotingManager();
 	clientAcceptor = new TCPClientAcceptor(server_port, addres);
 	serverON = false;
-	requestManager = new RequestManager();
 }
 
 Server::~Server() {
 	serverON = false;
-	delete game;
-	delete votingManager;
-	delete requestManager;
-	delete clientAcceptor;
-	delete clients;
 	for (map<int, boost::shared_ptr<boost::thread>>::iterator it =
 			threads.begin(); it != threads.end(); ++it) {
-		it->second->join();
+		it->second->interrupt();
 	}
-
+	delete game;
+	delete votingManager;
+	delete clientAcceptor;
+	delete clients;
 }
 
 bool Server::startServer() {

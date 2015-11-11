@@ -12,20 +12,16 @@
 #include <iostream>
 #include <atomic>
 
-#include "game/Game.h"
 #include "game/Server.h"
-#include "game/Clients.h"
-#include "game/Client.h"
-#include "game/VotingManager.h"
 #include "eventService/RequestManager.h"
-#include "network/TCPClientAcceptor.h"
-#include "network/TCPClientConnection.h"
+
+#define BLOCK_SIZE 4096
 
 using namespace std;
 
 void commandLine(Server *server);
 void runClientAcceptor(Server *server);
-void runClientConnection(Server *server);
+void runClientConnection(Client *client, Server *server);
 
 int main() {
 	int port = 2137;
@@ -34,7 +30,7 @@ int main() {
 
 	Server *server = new Server(roundTime, port, host);
 	if (!server->startServer()){
-		cout<<"error in starting server";
+		cout<<"Error in starting server";
 		delete server;
 		return 1;
 	}
@@ -64,16 +60,19 @@ void runClientAcceptor(Server *server) {
 	while (server->serverON) {
 		Client *client = new Client(server->clientAcceptor->acceptConnection());
 		server->clients->addToRandomColor(client);
+
 		boost::shared_ptr<boost::thread> clientThread(
-				new boost::thread(runClientConnection, server));
+				new boost::thread(runClientConnection, client, server));
 		server->threads[client->getID()] = clientThread;
 	}
 }
 
-void runClientConnection(Server *server) {
-	while (server->serverON) {
-		cout << "test";
-		sleep(2000);
+void runClientConnection(Client *client, Server *server) {
+	RequestManager *requestManager = new RequestManager();
+	while ((server->serverON)and(client->getThreadEnabled())) {
+		char buffer[BLOCK_SIZE];
+		client->getNetwork()->receive(buffer, BLOCK_SIZE);
+		requestManager->requestReaction(string(buffer),server);
 	}
 }
 

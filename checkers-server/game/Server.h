@@ -14,7 +14,6 @@
 #include "Clients.h"
 #include "Client.h"
 #include "../network/TCPClientAcceptor.h"
-#include "../eventService/RequestManager.h"
 #include <boost/thread/thread.hpp>
 #include <memory>
 #include <map>
@@ -28,7 +27,6 @@ public:
 	Game *game;
 	VotingManager *votingManager;
 	TCPClientAcceptor *clientAcceptor;
-	RequestManager *requestManager;
 	map<int, boost::shared_ptr<boost::thread>> threads;
 	atomic<bool> serverON;
 

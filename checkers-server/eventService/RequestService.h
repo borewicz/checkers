@@ -9,8 +9,7 @@
 #define EVENTSERVICE_REQUESTSERVICE_H_
 
 #include "../jsonParser/json/json.h"
-#include "../game/Clients.h"
-#include "../game/Game.h"
+#include "../game/Server.h"
 
 class RequestService {
 private:
@@ -21,7 +20,7 @@ public:
 	RequestService();
 	virtual ~RequestService();
 
-	virtual bool action(string request, Clients *clients, Game *game) = 0;
+	virtual bool action(string request, Server *server) = 0;
 };
 
 #endif /* EVENTSERVICE_REQUESTSERVICE_H_ */

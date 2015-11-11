@@ -64,3 +64,7 @@ bool Client::getIsConnected() {
 void Client::setIsConnected(bool connected) {
 	this->isConnected = connected;
 }
+
+TCPClientConnection* Client::getNetwork() {
+	return network;
+}

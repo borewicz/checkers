@@ -9,13 +9,14 @@
 #define EVENTSERVICE_REQUESTERROR_H_
 
 #include "RequestService.h"
+#include "../game/Server.h"
 
 class RequestError : public RequestService{
 public:
 	RequestError();
 	virtual ~RequestError();
 
-	bool action(string request, Clients *clients, Game *game);
+	bool action(string request, Server *server);
 };
 
 #endif /* EVENTSERVICE_REQUESTERROR_H_ */

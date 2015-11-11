@@ -15,7 +15,7 @@ RequestError::RequestError() {
 RequestError::~RequestError() {
 }
 
-bool RequestError::action(string request, Clients *clients, Game *game){
+bool RequestError::action(string request, Server *server){
 	cout<<"Wrong request";
 	return true;
 }
