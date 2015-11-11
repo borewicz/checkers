@@ -25,6 +25,7 @@ public:
 	virtual ~TCPClientAcceptor();
 
 	bool start();
+	bool stop();
 	TCPClientConnection* acceptConnection();
 };
 

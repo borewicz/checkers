@@ -14,20 +14,23 @@
 #include "Clients.h"
 #include "Client.h"
 #include "../network/TCPClientAcceptor.h"
+#include "../eventService/RequestManager.h"
 #include <boost/thread/thread.hpp>
 #include <memory>
 #include <map>
+#include <atomic>
 
 using namespace std;
 
 class Server {
-private:
+public:
 	Clients *clients;
 	Game *game;
 	VotingManager *votingManager;
 	TCPClientAcceptor *clientAcceptor;
+	RequestManager *requestManager;
 	map<int, boost::shared_ptr<boost::thread>> threads;
-	bool serverON;
+	atomic<bool> serverON;
 
 public:
 	Server(int roundTime, int server_port, const char* addres);
@@ -35,19 +38,6 @@ public:
 
 	bool startServer();
 	bool stopServer();
-
-	TCPClientAcceptor* getClientAcceptor();
-	void setClientAcceptor(TCPClientAcceptor* clientAcceptor);
-	Clients* getClients();
-	void setClients(Clients* clients);
-	Game* getGame();
-	void setGame(Game* game);
-	VotingManager* getVotingManager();
-	void setVotingManager(VotingManager* votingManager);
-
-private:
-	bool runAcceptor();
-	bool runClientConnection(Client *client);
 };
 
 #endif /* GAME_SERVER_H_ */

@@ -21,31 +21,21 @@ Server::Server(int roundTime, int server_port, const char* addres) {
 	votingManager = new VotingManager();
 	clientAcceptor = new TCPClientAcceptor(server_port, addres);
 	serverON = false;
+	requestManager = new RequestManager();
 }
 
 Server::~Server() {
-	delete clients;
+	serverON = false;
 	delete game;
 	delete votingManager;
+	delete requestManager;
 	delete clientAcceptor;
-}
-
-bool Server::runClientConnection(Client *client) {
-	cout<<"lsdfkjslk";
-}
-
-
-bool Server::runAcceptor() {
-	while (serverON) {
-		TCPClientConnection *acceptedClient =
-				clientAcceptor->acceptConnection();
-		Client *client = new Client(acceptedClient);
-		clients->addToRandomColor(client);
-		boost::shared_ptr<boost::thread> thread(
-				new boost::thread(runClientConnection,client));
-		threads[client->getID()] = thread;
-
+	delete clients;
+	for (map<int, boost::shared_ptr<boost::thread>>::iterator it =
+			threads.begin(); it != threads.end(); ++it) {
+		it->second->join();
 	}
+
 }
 
 bool Server::startServer() {
@@ -54,37 +44,7 @@ bool Server::startServer() {
 		cout << "Error when start server ";
 		return false;
 	}
+	serverON = true;
+
 	return true;
-}
-
-TCPClientAcceptor* Server::getClientAcceptor() {
-	return clientAcceptor;
-}
-
-void Server::setClientAcceptor(TCPClientAcceptor* clientAcceptor) {
-	this->clientAcceptor = clientAcceptor;
-}
-
-Clients* Server::getClients() {
-	return clients;
-}
-
-void Server::setClients(Clients* clients) {
-	this->clients = clients;
-}
-
-Game* Server::getGame() {
-	return game;
-}
-
-void Server::setGame(Game* game) {
-	this->game = game;
-}
-
-VotingManager* Server::getVotingManager() {
-	return votingManager;
-}
-
-void Server::setVotingManager(VotingManager* votingManager) {
-	this->votingManager = votingManager;
 }

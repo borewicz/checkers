@@ -41,7 +41,8 @@ bool TCPClientAcceptor::start() {
 
 	struct sockaddr_in address;
 
-	address.sin_family = PF_INET;
+	memset(&address, 0, sizeof(struct sockaddr));
+	address.sin_family = AF_INET;
 	address.sin_port = htons(port);
 	if (host.size() > 0) {
 		inet_pton(PF_INET, host.c_str(), &(address.sin_addr));
@@ -81,5 +82,11 @@ TCPClientConnection* TCPClientAcceptor::acceptConnection() {
 		return NULL;
 	}
 	return new TCPClientConnection(clientSocket, &address);
+}
+
+bool TCPClientAcceptor::stop() {
+	shutdown(sock, SHUT_RDWR);
+	close(sock);
+	return true;
 }
 
