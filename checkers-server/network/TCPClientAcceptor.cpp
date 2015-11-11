@@ -27,21 +27,22 @@ TCPClientAcceptor::~TCPClientAcceptor() {
 	}
 }
 
-int TCPClientAcceptor::start() {
+bool TCPClientAcceptor::start() {
 	if (isListening == true) {
 		printf("Server is already listening");
-		return 0;
+		return false;
 	}
 
 	sock = socket(PF_INET, SOCK_STREAM, 0);
 	if (sock == -1) {
 		printf("Could not create socket");
-		return 0;
+		return false;
 	}
 
 	struct sockaddr_in address;
 
-	address.sin_family = PF_INET;
+	memset(&address, 0, sizeof(struct sockaddr));
+	address.sin_family = AF_INET;
 	address.sin_port = htons(port);
 	if (host.size() > 0) {
 		inet_pton(PF_INET, host.c_str(), &(address.sin_addr));
@@ -55,19 +56,20 @@ int TCPClientAcceptor::start() {
 	int err = bind(sock, (struct sockaddr*) &address, sizeof(address));
 	if (err != 0) {
 		printf("bind() error");
-		return err;
+		return false;
 	}
 	err = listen(sock, 5);
 	if (err != 0) {
 		printf("listen() error");
-		return err;
+		return false;
 	}
 	isListening = true;
-	return 0;
+	return true;
 }
 
 TCPClientConnection* TCPClientAcceptor::acceptConnection() {
 	if (isListening == false) {
+		printf("acceptor is not listening");
 		return NULL;
 	}
 
@@ -80,5 +82,11 @@ TCPClientConnection* TCPClientAcceptor::acceptConnection() {
 		return NULL;
 	}
 	return new TCPClientConnection(clientSocket, &address);
+}
+
+bool TCPClientAcceptor::stop() {
+	shutdown(sock, SHUT_RDWR);
+	close(sock);
+	return true;
 }
 

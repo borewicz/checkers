@@ -7,10 +7,68 @@
 
 #include <iostream>
 #include "Game.h"
+#include <ctime>
 
 using namespace std;
 
-Game::Game() {
+Game::Game(int roundTime) {
+	actualRoundEndTime = 0;
+	this->roundTime = roundTime;
+	isGameStarted = false;
+	resetBoard();
+}
+
+Game::~Game() {
+}
+
+bool Game::startGame(){
+	if (isGameStarted){
+		cout<<"Game already started";
+		return false;
+	}
+	actualRoundEndTime = time(NULL) + roundTime;
+	resetBoard();
+	isGameStarted = true;
+	return true;
+}
+
+bool Game::endGame(){
+	if (isGameStarted == false){
+		cout<<"Game is not started";
+		return false;
+	}
+	actualRoundEndTime = 0;
+	resetBoard();
+	return true;
+}
+
+bool Game::movementValidation(Movement *movement, char color) {
+	return true;
+}
+
+bool Game::move(Movement *movement, char color) {
+	if (movementValidation(movement, color) == false) {
+		cout<<"wrong movement";
+		return false;
+	}
+	gameState[movement->getFrom()[0]][movement->getFrom()[1]] = gameState[movement->getTo()[0]][movement->getTo()[1]];
+	gameState[movement->getTo()[0]][movement->getTo()[1]] = '_';
+
+	return true;
+}
+
+void Game::drawGameBoard() {
+	for (int y = 9; y >= 0; y--) {
+		for (int x = 0; x < 10; x++) {
+			cout << gameState[y][x];
+		}
+		cout << endl;
+	}
+}
+
+void Game::resetBoard(){
+	actualRoundID = 0;
+
 	for (int y = 0; y < 10; y++) {
 		for (int x = 0; x < 10; x++) {
 			gameState[y][x] = '_';
@@ -28,34 +86,22 @@ Game::Game() {
 	}
 }
 
-Game::~Game() {
-	// TODO Auto-generated destructor stub
+boost::multi_array<char, 2> Game::getGameState(){
+	return gameState;
 }
 
-/*char game::getGameState() {
- return gameState;
- }*/
-
-bool Game::movementValidation(int move[4], char color) {
-	return true;
+int Game::getRoundTime(){
+	return roundTime;
 }
 
-bool Game::move(int movement[4], char color) {
-	if (movementValidation(movement, color) == false) {
-		printf("wrong movement");
-		return false;
-	}
-	gameState[movement[2]][movement[3]] = gameState[movement[0]][movement[1]];
-	gameState[movement[0]][movement[1]] = '_';
-
-	return true;
-}
-void Game::drawGameBoard() {
-	for (int y = 9; y >= 0; y--) {
-		for (int x = 0; x < 10; x++) {
-			cout << gameState[y][x];
-		}
-		cout << endl;
-	}
+int Game::getActualRoundEndTime(){
+	return actualRoundEndTime;
 }
 
+int Game::getActualRoundID(){
+	return actualRoundID;
+}
+
+bool Game::getIsGameStarted(){
+	return isGameStarted;
+}

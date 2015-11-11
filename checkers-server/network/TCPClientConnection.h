@@ -31,6 +31,7 @@ public:
 
     string getHost();
     int getPort();
+    int getSock();
 
 private:
 	TCPClientConnection(int sock, struct sockaddr_in *address);
