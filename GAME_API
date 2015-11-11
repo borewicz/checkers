@@ -56,8 +56,9 @@ OTRZYMYWANIE WIADOMOŚCI
 
 {
 	"request" : "message",
-	"time" : "14xxxxx", # timestamp (prościej)
-	"nick" : "nick"
+	"timestamp" : "14xxxxx",
+	"nick" : "nick",
+	"message" : "guwno"
 }
 
 ==================
@@ -65,6 +66,7 @@ ODBIERANIE PLANSZY
 ==================
 
 {
+	"request" : "board"
 	"board" : ["w","_","w","_","b","_","B", ...]
 	"time" : # timestamp + czas tury, (czas zakończenia danej tury)
 }

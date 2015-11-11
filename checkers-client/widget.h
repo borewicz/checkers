@@ -5,6 +5,7 @@
 #include <QTcpSocket>
 #include <QJsonObject>
 #include <QJsonDocument>
+#include <QJsonArray>
 
 namespace Ui {
 class Widget;
@@ -22,8 +23,9 @@ private:
     Ui::Widget *ui;
     QTcpSocket *sock;
     void connectToServer();
-    void sendStatus();
+    void sendMessage();
     void drawFields();
+    void parseResponse();
 };
 
 #endif // WIDGET_H
