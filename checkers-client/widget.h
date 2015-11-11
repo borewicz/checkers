@@ -26,6 +26,7 @@ private:
     void sendMessage();
     void drawFields();
     void parseResponse();
+    char board[8][8] = { { '_' } };
 };
 
 #endif // WIDGET_H

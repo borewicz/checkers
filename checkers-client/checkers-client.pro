@@ -18,6 +18,7 @@ SOURCES += main.cpp\
 HEADERS  += widget.h
 
 FORMS    += widget.ui
+QMAKE_CXXFLAGS += -std=c++11
 CONFIG += c++11
 
 RESOURCES += \

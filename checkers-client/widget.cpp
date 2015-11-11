@@ -16,6 +16,8 @@ Widget::~Widget()
 
 void Widget::drawFields()
 {
+    while ( QWidget* w = ui->fieldsGridLayout->findChild<QWidget*>() )
+        delete w;
 	bool isBlack = true;
     for (int i = 0; i < 8; i++)
 	{
@@ -78,17 +80,18 @@ void Widget::parseResponse()
                 {
                     for (int j = 0; j < 8; j++)
                     {
-                        QPushButton *button = ui->fieldsGridLayout->findChild<QPushButton*>(ui->fieldsGridLayout->itemAtPosition(i,j)->widget()->objectName());
-                        ui->chatTextEdit->append(QString::number(ui->fieldsGridLayout->count()));
-                        if (button)
-                            button->setText(json["board"].toArray()[i].toArray()[j].toString());
-//                        switch (json["board"].toArray()[i].toArray()[j].toString().toStdString()[0])
-//                        {
-//                            case 'w' : button->setIcon(QIcon(":/white.png"));
-//                                break;
-//                            case 'b' : button->setIcon(QIcon(":/black.png"));
-//                                break;
-//                        }
+                        board[i][j] = json["board"].toArray()[i].toArray()[j].toString()[0].toLatin1();
+//                        drawFields();
+                        QPushButton *button = (QPushButton *)ui->fieldsGridLayout->itemAt(8*i+j)->widget();
+                        switch (board[i][j])
+                        {
+                            case 'w' : button->setIcon(QIcon(":/white.png")); // tymczasowe
+                                break;
+                            case 'b' : button->setIcon(QIcon(":/black.png"));
+                                   break;
+                            default:
+                                break;
+                        }
                     }
                 }
             }
