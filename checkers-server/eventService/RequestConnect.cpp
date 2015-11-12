@@ -22,8 +22,8 @@ bool RequestConnect::action(Json::Value root, Server *server, Client *client) {
 		return true;
 	}
 
-	std::string nick = root.get("nick", "no_nick_field_in_json").asString();
-	if (nick == "no_nick_field_in_json") {
+	std::string nick = root.get("nick", "").asString();
+	if (nick == "") {
 		cout << "Client connecting error, no nick";
 		return false;
 	}
