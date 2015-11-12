@@ -17,13 +17,15 @@ a) request
 
 {
 	"request" : "connect",
-	"nick" : "nick", 
-	"color" : "WHITE"
+	"nick" : "nick"
 }
 
 b) respons 
 
-{ "status" : "ok" # lub zajęty }
+{ 
+	"status" : "ok", # lub zajęty 
+	"color" : "white" # "black" # przy statusie innym niż ok nie poleci kolor
+}
 
 ===========
 WYLOGOWANIE
@@ -32,7 +34,7 @@ WYLOGOWANIE
 a) request
 
 {
-	"request" : "disconnect",
+	"request" : "disconnect"
 }
 
 b) respons
