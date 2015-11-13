@@ -27,6 +27,7 @@ private:
     void drawFields();
     void parseResponse();
     char board[8][8] = { { '_' } };
+    void sendJSON(QJsonObject);
 };
 
 #endif // WIDGET_H

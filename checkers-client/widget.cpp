@@ -57,6 +57,10 @@ void Widget::connectToServer()
 		ui->chatTextEdit->append("Error: " + sock->errorString());
 	});
 	sock->connectToHost("127.0.0.1", 2137);
+    sendJSON(QJsonObject {
+                 { "request", "connect" },
+                 { "nick", ui->nickLineEdit->text() }
+             });
 	ui->chatTextEdit->append("Connecting...");
 }
 
@@ -105,15 +109,18 @@ void Widget::parseResponse()
 
 void Widget::sendMessage()
 {
+    sendJSON(QJsonObject {
+                 { "request", "message" },
+                 { "message", ui->messegeLineEdit->text() }
+             });
+    ui->chatTextEdit->append(ui->nickLineEdit->text() + ": " + ui->messegeLineEdit->text());
+    ui->messegeLineEdit->clear();
+}
+
+void Widget::sendJSON(QJsonObject json)
+{
     if (sock) {
-		QJsonObject json {
-            { "request", "message" },
-//			{ "nick", ui->nickLineEdit->text() },
-            { "message", ui->messegeLineEdit->text() }
-		};
-		QJsonDocument doc(json);
-		sock->write(QString(doc.toJson(QJsonDocument::Compact)).toUtf8());
-		ui->chatTextEdit->append(ui->nickLineEdit->text() + ": " + ui->messegeLineEdit->text());
-		ui->messegeLineEdit->clear();
-	}
+        QJsonDocument doc(json);
+        sock->write(QString(doc.toJson(QJsonDocument::Compact)).toUtf8());
+    }
 }
