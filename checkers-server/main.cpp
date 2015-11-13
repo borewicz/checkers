@@ -29,15 +29,15 @@ int main() {
 	int roundTime = 30;
 
 	Server *server = new Server(roundTime, port, host);
-	if (!server->startServer()){
-		cout<<"Error in starting server";
+	if (!server->startServer()) {
+		cout << "Error in starting server";
 		delete server;
 		return 1;
 	}
 
 	boost::shared_ptr<boost::thread> thread(
 			new boost::thread(runClientAcceptor, server));
-	server->threads[0]=thread;
+	server->threads[0] = thread;
 
 	commandLine(server);
 	delete server;
@@ -69,10 +69,14 @@ void runClientAcceptor(Server *server) {
 
 void runClientConnection(Client *client, Server *server) {
 	RequestManager *requestManager = new RequestManager();
-	while ((server->serverON)and(client->getThreadEnabled())) {
+	while ((server->serverON) and (client->getThreadEnabled())) {
 		char buffer[BLOCK_SIZE];
 		client->getNetwork()->receive(buffer, BLOCK_SIZE);
-		requestManager->requestReaction(string(buffer),server, client);
+		requestManager->requestReaction(string(buffer), server, client);
 	}
+	delete requestManager;
+	server->threads.erase(client->getID());
+	server->clients->removeClient(client->getID());
+	delete client;
 }
 
