@@ -72,7 +72,7 @@ void runClientConnection(Client *client, Server *server) {
 	while ((server->serverON)and(client->getThreadEnabled())) {
 		char buffer[BLOCK_SIZE];
 		client->getNetwork()->receive(buffer, BLOCK_SIZE);
-		requestManager->requestReaction(string(buffer),server);
+		requestManager->requestReaction(string(buffer),server, client);
 	}
 }
 

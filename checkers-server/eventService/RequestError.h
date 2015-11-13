@@ -10,13 +10,14 @@
 
 #include "RequestService.h"
 #include "../game/Server.h"
+#include "../game/Client.h"
 
 class RequestError : public RequestService{
 public:
 	RequestError();
 	virtual ~RequestError();
 
-	bool action(string request, Server *server);
+	bool action(Json::Value root, Server *server, Client *client);
 };
 
 #endif /* EVENTSERVICE_REQUESTERROR_H_ */

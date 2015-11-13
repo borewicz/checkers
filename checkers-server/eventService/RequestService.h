@@ -10,17 +10,24 @@
 
 #include "../jsonParser/json/json.h"
 #include "../game/Server.h"
+#include "../game/Client.h"
+
+#define BLOCK_SIZE 4096
 
 class RequestService {
-private:
+protected:
 	Json::Value root;
 	Json::Reader reader;
+	Json::StyledWriter writer;
 
 public:
 	RequestService();
 	virtual ~RequestService();
 
-	virtual bool action(string request, Server *server) = 0;
+	virtual bool action(Json::Value root, Server *server, Client *client) = 0;
+	Json::Value shortJson(string key, string value);
+	bool sendResponse(Json::Value root, Client *client);
+
 };
 
 #endif /* EVENTSERVICE_REQUESTSERVICE_H_ */

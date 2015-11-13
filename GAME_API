@@ -7,7 +7,7 @@ ZAŁOŻENIA
 - tam gdzie to zbędne walić statusy, podczas ostatniego projektu z ich i tak nie korzystaliśmy prawie, a ułatwi to nam zdecydowanie pracę
 - nieprawidłowe jsony po prostu będziemy ignorować przez jakieś try-except
 - nicki przechowuje serwer - posiadanie nicka na serwerze będzie warunkiem, czy w ogóle akceptować głos (żeby wyeliminować podszywy)
-- klient odbiera albo całą planszę (przy czym powinna ona mieć formę tablicy 10x10, zaznaczy się na niej poszczególnymi literkami albo cyferkami status danego pola) albo wiadomość z grupy
+- klient odbiera albo całą planszę (ma ona mieć formę tablicy 8x8, zaznaczy się na niej poszczególnymi znakami status danego pola) albo wiadomość z grupy
 
 =========
 LOGOWANIE
@@ -17,13 +17,21 @@ a) request
 
 {
 	"request" : "connect",
-	"nick" : "nick", 
-	"color" : "WHITE"
+	"nick" : "nick"
 }
 
 b) respons 
 
-{ "status" : "ok" # lub zajęty }
+{ 
+	"status" : "ok", # "not available" "already connected"
+	"color" : "white" # "black" # przy statusie innym niż ok nie poleci kolor
+}
+
+c) każdy request, przy którym serwer wykryje brak polączenia klienta zwróci:
+
+{ 
+	"status" : "not connected"
+}
 
 ===========
 WYLOGOWANIE
@@ -32,7 +40,7 @@ WYLOGOWANIE
 a) request
 
 {
-	"request" : "disconnect",
+	"request" : "disconnect"
 }
 
 b) respons
@@ -77,6 +85,7 @@ WYSYŁANIE RUCHU
 a) request
 {
 	"request" : "movement",
+	"time" : # timestamp + czas tury, (to co odebrane razem z planszą"
 	"movement" : ["0","0","1","1"]
 }
 
