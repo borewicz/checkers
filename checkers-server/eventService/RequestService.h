@@ -12,11 +12,9 @@
 #include "../game/Server.h"
 #include "../game/Client.h"
 
-#define BLOCK_SIZE 4096
 
 class RequestService {
 protected:
-	Json::Value root;
 	Json::Reader reader;
 	Json::StyledWriter writer;
 

@@ -17,14 +17,18 @@ RequestConnect::~RequestConnect() {
 
 bool RequestConnect::action(Json::Value root, Server *server, Client *client) {
 	if (client->getIsConnected()) {
-		cout << "Already connected";
+		cout << "Already connected" << endl;
 		sendResponse(shortJson("status", "already connected"), client);
 		return true;
 	}
 
-	std::string nick = root.get("nick", "").asString();
+	std::string nick = "";
+	if (root.isMember("nick")) {
+		nick = root.get("nick", "").asString();
+	}
+
 	if (nick == "") {
-		cout << "Client connecting error, no nick";
+		cout << "Client connecting error, no nick" << endl;
 		return false;
 	}
 
@@ -40,12 +44,13 @@ bool RequestConnect::action(Json::Value root, Server *server, Client *client) {
 
 Json::Value RequestConnect::responseJson(Clients *clients, int id) {
 	Json::Value json;
+	cout << "test test test" << endl;
 	if (clients->getBlackClients().find(id)
 			== clients->getBlackClients().end()) {
 		if (clients->getWhiteClients().find(id)
 				== clients->getWhiteClients().end()) {
 			//this case should be not possible
-			cout << "Error, cant find client";
+			cout << "Error, cant find client" << endl;
 			json["status"] = "server error";
 		} else {
 			json["status"] = "ok";

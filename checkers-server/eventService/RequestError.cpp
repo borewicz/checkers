@@ -16,7 +16,7 @@ RequestError::~RequestError() {
 }
 
 bool RequestError::action(Json::Value root, Server *server, Client *client){
-	cout<<"Wrong request";
+	cout<<"Wrong request"<<endl;
 	return true;
 }
 

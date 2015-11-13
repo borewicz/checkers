@@ -45,4 +45,3 @@ bool RequestMessage::action(Json::Value root, Server *server, Client *client) {
 	}
 	return true;
 }
-

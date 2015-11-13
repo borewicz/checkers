@@ -10,6 +10,7 @@
 
 #include "RequestError.h"
 #include "RequestConnect.h"
+#include "RequestMessage.h"
 
 #include "../jsonParser/json/json.h"
 #include "../game/Server.h"
@@ -21,6 +22,9 @@ RequestManager::RequestManager() {
 
 	RequestService *requestConnect = new RequestConnect();
 	requestServices["connect"] = requestConnect;
+
+	RequestService *requestMessage = new RequestMessage();
+	requestServices["message"] = requestMessage;
 }
 
 RequestManager::~RequestManager() {
@@ -30,19 +34,24 @@ RequestManager::~RequestManager() {
 	}
 }
 
-bool RequestManager::requestReaction(string request, Server *server, Client *client) {
+bool RequestManager::requestReaction(string request, Server *server,
+		Client *client) {
 	bool err = reader.parse(request, root);
 	if (!err) {
 		std::cout << "Failed to parse request "
 				<< reader.getFormattedErrorMessages();
 		return false;
 	}
-	std::string requestType = root.get("request", "error").asString();
-
-	if (requestServices.find(requestType) == requestServices.end()) {
+	std::string requestType;
+	if (root.isMember("request")) {
+		requestType = root.get("request", "error").asString();
+		if (requestServices.find(requestType) == requestServices.end()) {
+			requestType = "error";
+		}
+	} else {
 		requestType = "error";
 	}
-	err = requestServices[requestType]->action(request, server, client);
+	err = requestServices[requestType]->action(root, server, client);
 	return err;
 }
 
