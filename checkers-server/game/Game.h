@@ -14,9 +14,8 @@
 class Game {
 private:
 	int roundTime;
-	boost::multi_array<char, 2> gameState{boost::extents[10][10]};
+	boost::multi_array<char, 2> gameState{boost::extents[8][8]};
 	int actualRoundEndTime;
-	int actualRoundID;
 	bool isGameStarted;
 
 public:
@@ -25,14 +24,13 @@ public:
 
 	bool startGame();
 	bool endGame();
-	bool movementValidation(Movement *movement, char color);
-	bool move(Movement *movement, char color);
+	bool movementValidation(Movement *movement);
+	bool move(Movement *movement);
 	void drawGameBoard();
 
 	boost::multi_array<char, 2> getGameState();
 	int getRoundTime();
 	int getActualRoundEndTime();
-	int getActualRoundID();
 	bool getIsGameStarted();
 
 private:

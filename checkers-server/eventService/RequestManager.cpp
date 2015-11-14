@@ -12,6 +12,7 @@
 #include "RequestConnect.h"
 #include "RequestMessage.h"
 #include "RequestDisconnect.h"
+#include "RequestMovement.h"
 
 #include "../jsonParser/json/json.h"
 #include "../game/Server.h"
@@ -30,6 +31,8 @@ RequestManager::RequestManager() {
 	RequestService *requestDisconnect = new RequestDisconnect();
 	requestServices["disconnect"] = requestDisconnect;
 
+	RequestService *requestMovement = new RequestMovement();
+	requestServices["movement"] = requestMovement;
 }
 
 RequestManager::~RequestManager() {

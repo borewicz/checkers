@@ -25,6 +25,7 @@ public:
 	bool addToRandomColor(Client *client);
 	bool removeClient(int ID);
 	bool nickAvailable(string nick);
+	bool clientsReadyToPlay();
 
 	map<int, Client*> getWhiteClients();
 	map<int, Client*> getBlackClients();

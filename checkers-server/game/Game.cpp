@@ -42,12 +42,12 @@ bool Game::endGame(){
 	return true;
 }
 
-bool Game::movementValidation(Movement *movement, char color) {
+bool Game::movementValidation(Movement *movement) {
 	return true;
 }
 
-bool Game::move(Movement *movement, char color) {
-	if (movementValidation(movement, color) == false) {
+bool Game::move(Movement *movement) {
+	if (movementValidation(movement) == false) {
 		cout<<"wrong movement";
 		return false;
 	}
@@ -67,8 +67,6 @@ void Game::drawGameBoard() {
 }
 
 void Game::resetBoard(){
-	actualRoundID = 0;
-
 	for (int y = 0; y < 10; y++) {
 		for (int x = 0; x < 10; x++) {
 			gameState[y][x] = '_';
@@ -98,9 +96,6 @@ int Game::getActualRoundEndTime(){
 	return actualRoundEndTime;
 }
 
-int Game::getActualRoundID(){
-	return actualRoundID;
-}
 
 bool Game::getIsGameStarted(){
 	return isGameStarted;

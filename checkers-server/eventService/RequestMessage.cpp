@@ -36,12 +36,16 @@ bool RequestMessage::action(Json::Value root, Server *server, Client *client) {
 	for (map<int, Client*>::iterator it =
 			server->clients->getWhiteClients().begin();
 			it != server->clients->getWhiteClients().end(); ++it) {
-		sendResponse(json, it->second);
+		if (it->second->getIsConnected()) {
+			sendResponse(json, it->second);
+		}
 	}
 	for (map<int, Client*>::iterator it =
 			server->clients->getBlackClients().begin();
 			it != server->clients->getBlackClients().end(); ++it) {
-		sendResponse(json, it->second);
+		if (it->second->getIsConnected()) {
+			sendResponse(json, it->second);
+		}
 	}
 	return true;
 }

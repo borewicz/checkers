@@ -9,6 +9,8 @@
 #define GAME_MOVEMENT_H_
 
 #include <vector>
+#include <string.h>
+#include <iostream>
 
 using namespace std;
 
@@ -18,17 +20,21 @@ private:
 	vector<int> to;
 	char color;
 	int roundID;
+	string movementID;
 
 public:
 	Movement(int fromY, int fromX, int toY, int toX, char color, int roundID);
 	virtual ~Movement();
 
 	bool isEqual(Movement *movement);
-
+	string getMovementID();
 	vector<int> getFrom();
 	vector<int> getTo();
 	int getRoundID();
 	char getColor();
+
+private:
+	void generateID();
 };
 
 #endif /* GAME_MOVEMENT_H_ */

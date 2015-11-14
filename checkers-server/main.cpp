@@ -14,6 +14,8 @@
 
 #include "game/Server.h"
 #include "eventService/RequestManager.h"
+#include "game/Game.h"
+#include "game/VotingManager.h"
 
 #define BLOCK_SIZE 4096
 
@@ -22,6 +24,7 @@ using namespace std;
 void commandLine(Server *server);
 void runClientAcceptor(Server *server);
 void runClientConnection(Client *client, Server *server);
+void runGame(Server *server);
 
 int main() {
 	int port = 2137;
@@ -78,5 +81,21 @@ void runClientConnection(Client *client, Server *server) {
 	server->threads.erase(client->getID());
 	server->clients->removeClient(client->getID());
 	delete client;
+}
+
+void runGame(Server *server) {
+	while (server->serverON) {
+		if (server->clients->clientsReadyToPlay()) {
+			if (server->game->getIsGameStarted()){
+//				server->game->move(server->votingManager->getBestMove());
+
+			}
+		} else {
+			if (server->game->getIsGameStarted()) {
+				server->game->endGame();
+
+			}
+		}
+	}
 }
 

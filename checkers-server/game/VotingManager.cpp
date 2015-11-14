@@ -6,13 +6,33 @@
  */
 
 #include "VotingManager.h"
+#include "Movement.h"
+
+#include <cstring>
+#include <map>
 
 VotingManager::VotingManager() {
-	// TODO Auto-generated constructor stub
-
+	actualGameID = 0;
 }
 
 VotingManager::~VotingManager() {
-	// TODO Auto-generated destructor stub
+}
+
+void VotingManager::nextVote(int gameID) {
+	actualGameID = gameID;
+	votes.clear();
+	votesCount.clear();
+}
+
+void VotingManager::addMovement(Movement *movement) {
+	if (movement->getRoundID() == actualGameID) {
+		if (votes.find(movement->getMovementID()) == votes.end()) {
+			votes[movement->getMovementID()] = movement;
+			votesCount[movement->getMovementID()] = 1;
+		}else{
+			votesCount[movement->getMovementID()] ++;
+			delete movement;
+		}
+	}
 }
 

@@ -6,6 +6,7 @@
  */
 
 #include "Movement.h"
+#include <boost/lexical_cast.hpp>
 
 Movement::Movement(int fromY, int fromX, int toY, int toX, char color,
 		int roundID) {
@@ -50,4 +51,17 @@ vector<int> Movement::getFrom() {
 
 vector<int> Movement::getTo() {
 	return to;
+}
+
+string Movement::getMovementID() {
+	return movementID;
+}
+
+void Movement::generateID() {
+	movementID = boost::lexical_cast<std::string>(from[0])
+			+ boost::lexical_cast<std::string>(from[1])
+			+ boost::lexical_cast<std::string>(to[0])
+			+ boost::lexical_cast<std::string>(to[1])
+			+ color
+			+ boost::lexical_cast<std::string>(roundID);
 }

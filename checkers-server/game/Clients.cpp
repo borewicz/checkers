@@ -74,3 +74,23 @@ bool Clients::nickAvailable(string nick) {
 	}
 	return true;
 }
+
+bool Clients::clientsReadyToPlay() {
+	bool ready = false;
+	for (map<int, Client*>::iterator it = blackClients.begin();
+			it != blackClients.end(); ++it) {
+		if (it->second->getIsConnected()) {
+			ready = true;
+			break;
+		}
+	}
+	if (ready) {
+		for (map<int, Client*>::iterator it = whiteClients.begin();
+				it != whiteClients.end(); ++it) {
+			if (it->second->getIsConnected()) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
