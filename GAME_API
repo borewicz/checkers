@@ -77,6 +77,7 @@ ODBIERANIE PLANSZY
 	"request" : "board"
 	"board" : ["w","_","w","_","b","_","B", ...]
 	"time" : # timestamp + czas tury, (czas zakończenia danej tury)
+	"current color" : "white"# "black"
 }
 
 ===============

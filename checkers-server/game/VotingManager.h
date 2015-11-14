@@ -16,13 +16,14 @@ private:
 	map<string, int> votesCount;
 	map<string, Movement*> votes;
 	int actualGameID;
+	string currentColor;
 public:
 	VotingManager();
 	virtual ~VotingManager();
 
 	void addMovement(Movement *movement);
-	void nextVote(int gameID);
-	Movement* getBestMove();
+	void nextVote(int gameID, string color);
+	Movement getBestMove();
 };
 
 #endif /* GAME_VOTINGMANAGER_H_ */

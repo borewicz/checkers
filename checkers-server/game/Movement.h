@@ -16,20 +16,20 @@ using namespace std;
 
 class Movement {
 private:
-	vector<int> from;
-	vector<int> to;
+	vector<int> X;
+	vector<int> Y;
 	char color;
 	int roundID;
 	string movementID;
 
 public:
-	Movement(int fromY, int fromX, int toY, int toX, char color, int roundID);
+	Movement();
+	Movement(int coordinates[20], char color, int roundID);
 	virtual ~Movement();
 
-	bool isEqual(Movement *movement);
 	string getMovementID();
-	vector<int> getFrom();
-	vector<int> getTo();
+	vector<int> getX();
+	vector<int> getY();
 	int getRoundID();
 	char getColor();
 

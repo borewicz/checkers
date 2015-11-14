@@ -16,6 +16,7 @@ private:
 	int roundTime;
 	boost::multi_array<char, 2> gameState{boost::extents[8][8]};
 	int actualRoundEndTime;
+	string currentMovementColor;
 	bool isGameStarted;
 
 public:
@@ -24,17 +25,19 @@ public:
 
 	bool startGame();
 	bool endGame();
-	bool movementValidation(Movement *movement);
-	bool move(Movement *movement);
+	bool movementValidation(Movement movement);
+	bool move(Movement movement);
 	void drawGameBoard();
 
 	boost::multi_array<char, 2> getGameState();
 	int getRoundTime();
 	int getActualRoundEndTime();
 	bool getIsGameStarted();
+	string getCurrentMovementColor();
 
 private:
 	void resetBoard();
+	void removeBetween(int sX, int sY, int dX, int dY);
 };
 
 #endif /* GAME_GAME_H_ */

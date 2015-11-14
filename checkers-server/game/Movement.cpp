@@ -8,33 +8,25 @@
 #include "Movement.h"
 #include <boost/lexical_cast.hpp>
 
-Movement::Movement(int fromY, int fromX, int toY, int toX, char color,
-		int roundID) {
-	from.push_back(fromY);
-	from.push_back(fromX);
-	to.push_back(toY);
-	to.push_back(toX);
+Movement::Movement(int coordinates[20], char color, int roundID) {
+	for (int i = 0; i < 20; i = i + 2) {
+		X.push_back(coordinates[i]);
+	}
+	for (int i = 1; i < 20; i = i + 2) {
+		Y.push_back(coordinates[i]);
+	}
 	this->color = color;
 	this->roundID = roundID;
+	generateID();
+}
+
+Movement::Movement(){
+	this->color = '0';
+	this->roundID = 0;
+	this->movementID="0";
 }
 
 Movement::~Movement() {
-}
-
-bool Movement::isEqual(Movement *movement) {
-	if (from[0] != movement->from[0])
-		return false;
-	if (from[1] != movement->from[1])
-		return false;
-	if (to[0] != movement->to[0])
-		return false;
-	if (to[1] != movement->to[1])
-		return false;
-	if (color != movement->color)
-		return false;
-	if (roundID != movement->roundID)
-		return false;
-	return true;
 }
 
 char Movement::getColor() {
@@ -45,12 +37,12 @@ int Movement::getRoundID() {
 	return roundID;
 }
 
-vector<int> Movement::getFrom() {
-	return from;
+vector<int> Movement::getX() {
+	return X;
 }
 
-vector<int> Movement::getTo() {
-	return to;
+vector<int> Movement::getY() {
+	return Y;
 }
 
 string Movement::getMovementID() {
@@ -58,10 +50,10 @@ string Movement::getMovementID() {
 }
 
 void Movement::generateID() {
-	movementID = boost::lexical_cast<std::string>(from[0])
-			+ boost::lexical_cast<std::string>(from[1])
-			+ boost::lexical_cast<std::string>(to[0])
-			+ boost::lexical_cast<std::string>(to[1])
-			+ color
-			+ boost::lexical_cast<std::string>(roundID);
+	movementID = "";
+	for (int i = 0; i < 10; i++) {
+		movementID += boost::lexical_cast<std::string>(X[i]);
+		movementID += boost::lexical_cast<std::string>(Y[i]);
+	}
+	movementID = movementID + color + boost::lexical_cast<std::string>(roundID);
 }
