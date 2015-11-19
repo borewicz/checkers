@@ -16,7 +16,7 @@ RequestConnect::~RequestConnect() {
 }
 
 bool RequestConnect::action(Json::Value root, Server *server, Client *client) {
-	cout << "client " << client->getNick()<<" connect"<<endl;
+	cout << "client " << client->getNick() << " connect" << endl;
 	if (client->getIsConnected()) {
 		cout << "client " << client->getNick() << " already connected" << endl;
 		sendResponse(shortJson("status", "already connected"), client);
@@ -45,10 +45,8 @@ bool RequestConnect::action(Json::Value root, Server *server, Client *client) {
 
 Json::Value RequestConnect::responseJson(Clients *clients, int id) {
 	Json::Value json;
-	if (clients->getBlackClients().find(id)
-			== clients->getBlackClients().end()) {
-		if (clients->getWhiteClients().find(id)
-				== clients->getWhiteClients().end()) {
+	if (clients->getBlackClients().count(id) == 0) {
+		if (clients->getWhiteClients().count(id) == 0) {
 			//this case should be not possible
 			cout << "Error, cant find client" << endl;
 			json["status"] = "server error";

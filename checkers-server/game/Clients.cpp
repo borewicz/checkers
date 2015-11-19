@@ -46,8 +46,8 @@ bool Clients::addToRandomColor(Client *client) {
 }
 
 bool Clients::removeClient(int ID) {
-	if (whiteClients.find(ID) == whiteClients.end()) {
-		if (blackClients.find(ID) == blackClients.end()) {
+	if (whiteClients.count(ID) == 0) {
+		if (blackClients.count(ID) == 0) {
 			cout << "Client not found";
 			return false;
 		} else {
@@ -60,15 +60,13 @@ bool Clients::removeClient(int ID) {
 }
 
 bool Clients::nickAvailable(string nick) {
-	for (map<int, Client*>::iterator it = whiteClients.begin();
-			it != whiteClients.end(); ++it) {
-		if (it->second->getNick() == nick) {
+	for (auto const& iterator : whiteClients) {
+		if (iterator.second->getNick() == nick) {
 			return false;
 		}
 	}
-	for (map<int, Client*>::iterator it = blackClients.begin();
-			it != blackClients.end(); ++it) {
-		if (it->second->getNick() == nick) {
+	for (auto const& iterator : blackClients) {
+		if (iterator.second->getNick() == nick) {
 			return false;
 		}
 	}
@@ -77,17 +75,15 @@ bool Clients::nickAvailable(string nick) {
 
 bool Clients::clientsReadyToPlay() {
 	bool ready = false;
-	for (map<int, Client*>::iterator it = blackClients.begin();
-			it != blackClients.end(); ++it) {
-		if (it->second->getIsConnected()) {
+	for (auto const& iterator : blackClients) {
+		if (iterator.second->getIsConnected()) {
 			ready = true;
 			break;
 		}
 	}
 	if (ready) {
-		for (map<int, Client*>::iterator it = whiteClients.begin();
-				it != whiteClients.end(); ++it) {
-			if (it->second->getIsConnected()) {
+		for (auto const& iterator : whiteClients) {
+			if (iterator.second->getIsConnected()) {
 				return true;
 			}
 		}

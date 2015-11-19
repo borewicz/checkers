@@ -20,14 +20,19 @@ bool RequestBoard::action(Json::Value root, Server *server, Client *client) {
 
 bool RequestBoard::sendBoard(Server *server) {
 	Json::Value json;
-	Json::Value array(Json::arrayValue);
+	Json::Value array;
 
 	boost::multi_array<char, 2> gameState { boost::extents[8][8] };
 	gameState = server->game->getGameState();
-	for (int i = 0; i < 8; i++) {
+	for (int i = 7; i >= 0; i--) {
+		Json::Value array2;
 		for (int j = 0; j < 8; j++) {
-			array.append(gameState[i][j]);
+			;
+			string text = "";
+			text+=gameState[j][i];
+			array2.append(text);
 		}
+		array.append(array2);
 	}
 
 	json["request"] = "board";

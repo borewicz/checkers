@@ -36,9 +36,8 @@ RequestManager::RequestManager() {
 }
 
 RequestManager::~RequestManager() {
-	for (map<string, RequestService*>::iterator it = requestServices.begin();
-			it != requestServices.end(); ++it) {
-		delete (it->second);
+	for (auto const& iterator : requestServices) {
+		delete (iterator.second);
 	}
 }
 
