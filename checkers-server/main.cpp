@@ -16,6 +16,7 @@
 #include "eventService/RequestManager.h"
 #include "game/Game.h"
 #include "game/VotingManager.h"
+#include "eventService/RequestBoard.h"
 
 #define BLOCK_SIZE 4096
 
@@ -25,6 +26,8 @@ void commandLine(Server *server);
 void runClientAcceptor(Server *server);
 void runClientConnection(Client *client, Server *server);
 void runGame(Server *server);
+
+boost::mutex serverMutex;
 
 int main() {
 	int port = 2137;
@@ -38,11 +41,16 @@ int main() {
 		return 1;
 	}
 
-	boost::shared_ptr<boost::thread> thread(
+	boost::shared_ptr<boost::thread> threadAcceptor(
 			new boost::thread(runClientAcceptor, server));
-	server->threads[0] = thread;
+	server->threads[0] = threadAcceptor;
+
+//	boost::shared_ptr<boost::thread> threadGame(
+//			new boost::thread(runGame, server));
+//	server->threads[1] = threadGame;
 
 	commandLine(server);
+
 	delete server;
 }
 
@@ -61,41 +69,81 @@ void commandLine(Server *server) {
 
 void runClientAcceptor(Server *server) {
 	while (server->serverON) {
+		//clientAcceptor is used only here
 		Client *client = new Client(server->clientAcceptor->acceptConnection());
-		server->clients->addToRandomColor(client);
-
-		boost::shared_ptr<boost::thread> clientThread(
-				new boost::thread(runClientConnection, client, server));
-		server->threads[client->getID()] = clientThread;
+		cout << "client " << client->getNick()<<" connect"<<endl;
+		serverMutex.lock();
+			server->clients->addToRandomColor(client);
+			boost::shared_ptr<boost::thread> clientThread(
+					new boost::thread(runClientConnection, client, server));
+			server->threads[client->getID()] = clientThread;
+		serverMutex.unlock();
 	}
 }
 
 void runClientConnection(Client *client, Server *server) {
 	RequestManager *requestManager = new RequestManager();
-	while ((server->serverON) and (client->getThreadEnabled())) {
+
+	serverMutex.lock();
+		bool run = client->getThreadEnabled();
+	serverMutex.unlock();
+
+	while ((server->serverON) and (run)) {
 		char buffer[BLOCK_SIZE];
 		client->getNetwork()->receive(buffer, BLOCK_SIZE);
-		requestManager->requestReaction(string(buffer), server, client);
+
+		cout<<"message received"<<endl;
+
+		serverMutex.lock();
+			requestManager->requestReaction(string(buffer), server, client);
+			run = client->getThreadEnabled();
+		serverMutex.unlock();
 	}
 	delete requestManager;
-	server->threads.erase(client->getID());
-	server->clients->removeClient(client->getID());
-	delete client;
+	serverMutex.lock();
+		server->threads.erase(client->getID());
+		server->clients->removeClient(client->getID());
+		delete client;
+	serverMutex.unlock();
 }
 
 void runGame(Server *server) {
+	RequestBoard *requestBoard = new RequestBoard();
+	serverMutex.lock();
+		int time = server->game->getRoundTime();
+	serverMutex.unlock();
+	cout<<"game server run"<<endl;
 	while (server->serverON) {
-		if (server->clients->clientsReadyToPlay()) {
-			if (server->game->getIsGameStarted()){
-//				server->game->move(server->votingManager->getBestMove());
-
+		serverMutex.lock();
+			if (server->clients->clientsReadyToPlay()) {
+				if (server->game->getIsGameStarted()) {
+					server->game->move(server->votingManager->getBestMove());
+					requestBoard->sendBoard(server);
+					server->votingManager->nextVote(
+							server->game->getActualRoundEndTime(),
+							server->game->getCurrentMovementColor());
+					if (!server->game->getIsGameStarted()) {
+						continue;
+					}
+				} else {
+					server->game->startGame();
+					server->votingManager->nextVote(
+							server->game->getActualRoundEndTime(),
+							server->game->getCurrentMovementColor());
+					requestBoard->sendBoard(server);
+				}
+			} else {
+				if (server->game->getIsGameStarted()) {
+					server->game->endGame();
+					server->votingManager->nextVote(
+							server->game->getActualRoundEndTime(),
+							server->game->getCurrentMovementColor());
+				}
 			}
-		} else {
-			if (server->game->getIsGameStarted()) {
-				server->game->endGame();
-
-			}
-		}
+		serverMutex.unlock();
+		cout<<"sleep"<<endl;
+		sleep(time);
 	}
+	delete requestBoard;
 }
 

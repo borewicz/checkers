@@ -16,6 +16,7 @@ RequestConnect::~RequestConnect() {
 }
 
 bool RequestConnect::action(Json::Value root, Server *server, Client *client) {
+	cout << "client " << client->getNick()<<" connect"<<endl;
 	if (client->getIsConnected()) {
 		cout << "client " << client->getNick() << " already connected" << endl;
 		sendResponse(shortJson("status", "already connected"), client);

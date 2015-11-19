@@ -35,15 +35,16 @@ bool RequestBoard::sendBoard(Server *server) {
 	json["time"] = boost::lexical_cast<std::string>(
 			server->game->getActualRoundEndTime());
 	json["current color"] = server->game->getCurrentMovementColor();
-	for (map<int, Client*>::iterator it =
-			server->clients->getBlackClients().begin();
-			it != server->clients->getBlackClients().end(); ++it) {
-		sendResponse(json, it->second);
+
+	for (auto const& iterator : server->clients->getBlackClients()) {
+		if (iterator.second->getIsConnected()) {
+			sendResponse(json, iterator.second);
+		}
 	}
-	for (map<int, Client*>::iterator it =
-			server->clients->getWhiteClients().begin();
-			it != server->clients->getWhiteClients().end(); ++it) {
-		sendResponse(json, it->second);
+	for (auto const& iterator : server->clients->getWhiteClients()) {
+		if (iterator.second->getIsConnected()) {
+			sendResponse(json, iterator.second);
+		}
 	}
 	return true;
 }

@@ -14,7 +14,6 @@ RequestService::~RequestService() {
 }
 
 bool RequestService::sendResponse(Json::Value root, Client *client) {
-
 	string response = writer.write(root);
 	int size = response.size();
 	char buffer[size];

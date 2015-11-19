@@ -14,6 +14,7 @@ RequestMovement::~RequestMovement() {
 }
 
 bool RequestMovement::action(Json::Value root, Server *server, Client *client){
+	cout << "client " << client->getNick()<<" connect"<<endl;
 	if (!client->getIsConnected()) {
 		sendResponse(shortJson("status", "not connected"), client);
 		return true;

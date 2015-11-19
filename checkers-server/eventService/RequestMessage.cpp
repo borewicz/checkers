@@ -16,6 +16,7 @@ RequestMessage::~RequestMessage() {
 }
 
 bool RequestMessage::action(Json::Value root, Server *server, Client *client) {
+	cout << "client " << client->getNick() << " message" << endl;
 	if (!client->getIsConnected()) {
 		sendResponse(shortJson("status", "not connected"), client);
 		return true;
@@ -23,7 +24,7 @@ bool RequestMessage::action(Json::Value root, Server *server, Client *client) {
 
 	std::string message = root.get("message", "").asString();
 	if (message == "") {
-		cout << "Client message error, no message";
+		cout << "Client message error, no message" << endl;
 		return false;
 	}
 
@@ -33,18 +34,18 @@ bool RequestMessage::action(Json::Value root, Server *server, Client *client) {
 	json["nick"] = client->getNick();
 	json["message"] = message;
 
-	for (map<int, Client*>::iterator it =
-			server->clients->getWhiteClients().begin();
-			it != server->clients->getWhiteClients().end(); ++it) {
-		if (it->second->getIsConnected()) {
-			sendResponse(json, it->second);
+	if (!server->clients->getWhiteClients().empty()) {
+		for (auto const& iterator : server->clients->getWhiteClients()) {
+			if (iterator.second->getIsConnected()) {
+				sendResponse(json, iterator.second);
+			}
 		}
 	}
-	for (map<int, Client*>::iterator it =
-			server->clients->getBlackClients().begin();
-			it != server->clients->getBlackClients().end(); ++it) {
-		if (it->second->getIsConnected()) {
-			sendResponse(json, it->second);
+	if (!server->clients->getBlackClients().empty()) {
+		for (auto const& iterator : server->clients->getBlackClients()) {
+			if (iterator.second->getIsConnected()) {
+				sendResponse(json, iterator.second);
+			}
 		}
 	}
 	return true;

@@ -27,7 +27,7 @@ bool Game::startGame() {
 		cout << "Game already started";
 		return false;
 	}
-	actualRoundEndTime = 'white';
+	currentMovementColor = "white";
 	actualRoundEndTime = time(NULL) + roundTime;
 	resetBoard();
 	isGameStarted = true;
