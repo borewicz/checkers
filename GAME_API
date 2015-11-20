@@ -72,12 +72,20 @@ OTRZYMYWANIE WIADOMOŚCI
 ==================
 ODBIERANIE PLANSZY
 ==================
-
 {
-	"request" : "board"
-	"board" : ["w","_","w","_","b","_","B", ...]
-	"time" : # timestamp + czas tury, (czas zakończenia danej tury)
-	"current color" : "white"# "black"
+   "board" : [
+      [ "_", "b", "_", "b", "_", "b", "_", "b" ],
+      [ "b", "_", "b", "_", "b", "_", "b", "_" ],
+      [ "_", "b", "_", "b", "_", "b", "_", "b" ],
+      [ "_", "_", "_", "_", "_", "_", "_", "_" ],
+      [ "_", "_", "_", "_", "_", "_", "_", "_" ],
+      [ "w", "_", "w", "_", "w", "_", "w", "_" ],
+      [ "_", "w", "_", "w", "_", "w", "_", "w" ],
+      [ "w", "_", "w", "_", "w", "_", "w", "_" ]
+   ],
+   "current color" : "white",
+   "request" : "board",
+   "time" : "1447975142"
 }
 
 ===============
@@ -87,7 +95,7 @@ a) request
 {
 	"request" : "movement",
 	"time" : # timestamp + czas tury, (to co odebrane razem z planszą"
-	"movement" : ["0","0","1","1"]
+	"movement" : [0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,-1,-1,-1,-1,-1]
 }
 
 b) response

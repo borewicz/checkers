@@ -26,15 +26,22 @@ void VotingManager::nextVote(int gameID, string color) {
 	currentColor = color;
 }
 
-void VotingManager::addMovement(Movement *movement) {
-	if (movement->getRoundID() == actualGameID) {
-		if (votes.find(movement->getMovementID()) == votes.end()) {
-			votes[movement->getMovementID()] = movement;
-			votesCount[movement->getMovementID()] = 1;
-		} else {
-			votesCount[movement->getMovementID()]++;
-			delete movement;
+bool VotingManager::addMovement(Movement *movement) {
+	if (((movement->getColor() == 'w') && (currentColor == "white"))
+			|| ((movement->getColor() == 'b') && (currentColor == "black"))) {
+		if (movement->getRoundID() == actualGameID) {
+			if (votes.count(movement->getMovementID()) == 0) {
+				votes[movement->getMovementID()] = movement;
+				votesCount[movement->getMovementID()] = 1;
+			} else {
+				votesCount[movement->getMovementID()]++;
+				delete movement;
+			}
+			return true;
 		}
+		return false;
+	} else {
+		return false;
 	}
 }
 
@@ -48,7 +55,7 @@ Movement VotingManager::getBestMove() {
 			maxID = it->first;
 		}
 	}
-	if (maxCount==0){
+	if (maxCount == 0) {
 		Movement movement = Movement();
 		return movement;
 	}

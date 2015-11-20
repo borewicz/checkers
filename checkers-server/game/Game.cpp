@@ -58,6 +58,7 @@ bool Game::move(Movement movement) {
 		endGame();
 		return true;
 	}
+	//execute move
 	int size = movement.getX().size();
 	for (int i = 0; i < size - 1; i++) {
 		removeBetween(movement.getX()[i], movement.getY()[i],
@@ -66,6 +67,15 @@ bool Game::move(Movement movement) {
 	gameState[movement.getX()[size - 1]][movement.getY()[size - 1]] =
 			gameState[movement.getX()[0]][movement.getY()[0]];
 	gameState[movement.getX()[0]][movement.getY()[0]] = '_';
+
+	//king turn
+	if ((movement.getY()[size - 1] == 7) && (movement.getColor() == 'w')) {
+		gameState[movement.getX()[size - 1]][movement.getY()[size - 1]] = 'W';
+	}
+
+	if ((movement.getY()[size - 1] == 0) && (movement.getColor() == 'b')) {
+		gameState[movement.getX()[size - 1]][movement.getY()[size - 1]] = 'B';
+	}
 
 	if (currentMovementColor == "white") {
 		currentMovementColor = "black";
@@ -162,6 +172,6 @@ bool Game::getIsGameStarted() {
 	return isGameStarted;
 }
 
-string Game::getCurrentMovementColor(){
+string Game::getCurrentMovementColor() {
 	return currentMovementColor;
 }

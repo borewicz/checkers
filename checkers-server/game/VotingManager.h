@@ -21,7 +21,7 @@ public:
 	VotingManager();
 	virtual ~VotingManager();
 
-	void addMovement(Movement *movement);
+	bool addMovement(Movement *movement);
 	void nextVote(int gameID, string color);
 	Movement getBestMove();
 };
