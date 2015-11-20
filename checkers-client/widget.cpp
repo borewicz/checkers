@@ -28,18 +28,22 @@ void Widget::drawFields()
 			button->setMinimumSize(46, 46);
 			button->setMaximumSize(46, 46);
 			button->setFlat(true);
-			button->setEnabled(false);
+            button->setEnabled(true);
             if (isBlack) button->setStyleSheet("background-color: black; border: none;");
-			else button->setStyleSheet("background-color: white; border: none;");
+            else button->setStyleSheet("background-color: white; border: none;");
+            connect(button, &QPushButton::clicked, [=]{
+                int index = ui->fieldsGridLayout->indexOf(button);
+
+                if(index != -1)
+                {
+                    int row, col, col_span, row_span;
+                    ui->fieldsGridLayout->getItemPosition(index, &row, &col, &col_span, &row_span);
+                    qDebug() << "Clicked Item is at:" << row << col
+                             << "spanning" << row_span << col_span;
+                }
+            });
 			button->setAutoFillBackground(true);
-			//            button->setIcon(QIcon(":/null.png"));
-			//            button->setIconSize(QSize(46, 46));
-			//            button->setStyleSheet(""
-			//                     "background-repeat: no-repeat;"
-			//                     "background-position: center center");
-			//            connect(button, QtCore.SIGNAL("clicked()"),
-			//                lambda i=i, j=j: self.sendMove(i, j))
-			ui->fieldsGridLayout->addWidget(button, i, j);
+            ui->fieldsGridLayout->addWidget(button, i, j);
 			isBlack = !isBlack;
 		}
 	}

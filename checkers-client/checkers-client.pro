@@ -11,15 +11,14 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = checkers-client
 TEMPLATE = app
 
-
 SOURCES += main.cpp\
         widget.cpp
 
 HEADERS  += widget.h
 
 FORMS    += widget.ui
-QMAKE_CXXFLAGS += -std=c++11
 CONFIG += c++11
 
 RESOURCES += \
     resources.qrc
+
