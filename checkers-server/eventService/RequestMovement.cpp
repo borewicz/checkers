@@ -27,8 +27,9 @@ bool RequestMovement::action(Json::Value root, Server *server, Client *client) {
 	}
 
 	const Json::Value movementJsonArray = root["movement"];
-	int movementIntArray[movementJsonArray.size()];
-	for (int i = 0; i < movementJsonArray.size(); i++) {
+	int size = movementJsonArray.size();
+	int movementIntArray[size];
+	for (int i = 0; i < size; i++) {
 		movementIntArray[i] = movementJsonArray.asInt();
 	}
 
@@ -43,5 +44,5 @@ bool RequestMovement::action(Json::Value root, Server *server, Client *client) {
 		}
 	}
 	sendResponse(shortJson("status", "wrong move"), client);
-	return false;
+	return true;
 }
