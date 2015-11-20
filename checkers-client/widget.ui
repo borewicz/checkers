@@ -67,6 +67,13 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QPushButton" name="sendMoveButton">
+       <property name="text">
+        <string>Send Move</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
   </layout>
