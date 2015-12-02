@@ -47,7 +47,7 @@ all: checkers-server
 checkers-server: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	g++ -I/opt/local/include -L/opt/local/lib -lboost_system -lboost_thread -o "checkers-server" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++ -I/opt/local/include -L/opt/local/lib -lboost_system-mt -lboost_thread-mt -o "checkers-server" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
