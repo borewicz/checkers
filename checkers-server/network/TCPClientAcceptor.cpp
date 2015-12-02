@@ -53,7 +53,7 @@ bool TCPClientAcceptor::start() {
 	int option = 1;
 	setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &option, sizeof(option));
 
-	int err = bind(sock, (struct sockaddr*) &address, sizeof(address));
+	int err = ::bind(sock, (struct sockaddr*) &address, sizeof(address));
 	if (err != 0) {
 		printf("bind() error");
 		return false;

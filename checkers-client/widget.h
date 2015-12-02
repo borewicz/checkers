@@ -6,6 +6,7 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QJsonArray>
+#include <QDateTime>
 
 namespace Ui {
 class Widget;
@@ -29,6 +30,9 @@ private:
     char board[8][8] = { { '_' } };
     void sendJSON(QJsonObject);
     void fieldClick();
+    void sendMove();
+//    QList<QPair<int, int>> moves;
+    QJsonArray moves;
 };
 
 #endif // WIDGET_H

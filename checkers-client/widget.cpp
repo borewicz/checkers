@@ -6,6 +6,7 @@ Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget)
 	ui->setupUi(this);
 	connect(ui->connectButton, &QPushButton::clicked, this, &Widget::connectToServer);
     connect(ui->messegeLineEdit, &QLineEdit::returnPressed, this, &Widget::sendMessage);
+    connect(ui->sendMoveButton, &QPushButton::clicked, this, &Widget::sendMove);
 	drawFields();
 }
 
@@ -28,7 +29,8 @@ void Widget::drawFields()
 			button->setMinimumSize(46, 46);
 			button->setMaximumSize(46, 46);
 			button->setFlat(true);
-            button->setEnabled(true);
+            if (!isBlack)
+                button->setEnabled(false);
             if (isBlack) button->setStyleSheet("background-color: black; border: none;");
             else button->setStyleSheet("background-color: white; border: none;");
             connect(button, &QPushButton::clicked, [=]{
@@ -36,10 +38,14 @@ void Widget::drawFields()
 
                 if(index != -1)
                 {
+                    if (moves.size() % 4 == 2)
+                        button->setIcon(QIcon(":/black.png"));
+                    else
+                        button->setIcon(QIcon());
                     int row, col, col_span, row_span;
                     ui->fieldsGridLayout->getItemPosition(index, &row, &col, &col_span, &row_span);
-                    qDebug() << "Clicked Item is at:" << row << col
-                             << "spanning" << row_span << col_span;
+                    moves.append(row);
+                    moves.append(col);
                 }
             });
 			button->setAutoFillBackground(true);
@@ -119,6 +125,17 @@ void Widget::sendMessage()
              });
     ui->chatTextEdit->append(ui->nickLineEdit->text() + ": " + ui->messegeLineEdit->text());
     ui->messegeLineEdit->clear();
+}
+
+void Widget::sendMove()
+{
+    sendJSON(QJsonObject {
+                 { "request", "movement" },
+                 { "time", QString::number(QDateTime::currentDateTime().toUTC().toTime_t()) },
+                 { "movement", moves }
+             });
+    for (int i = moves.size(); i > 0; i--)
+        moves.removeLast();
 }
 
 void Widget::sendJSON(QJsonObject json)
