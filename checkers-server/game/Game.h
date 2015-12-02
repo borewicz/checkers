@@ -25,8 +25,8 @@ public:
 
 	bool startGame();
 	bool endGame();
-	bool movementValidation(Movement movement);
-	bool move(Movement movement);
+	bool movementValidation(Movement *movement);
+	bool move(Movement *movement);
 	void drawGameBoard();
 
 	boost::multi_array<char, 2> getGameState();
@@ -38,6 +38,7 @@ public:
 private:
 	void resetBoard();
 	void removeBetween(int sX, int sY, int dX, int dY);
+	bool beatingValidation(int x1, int y1, int x2, int y2);
 };
 
 #endif /* GAME_GAME_H_ */

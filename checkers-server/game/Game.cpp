@@ -44,37 +44,134 @@ bool Game::endGame() {
 	resetBoard();
 	return true;
 }
+bool Game::beatingValidation(int x1, int y1, int x2, int y2) {
 
-bool Game::movementValidation(Movement movement) {
+	if ((abs(x1 - x2) == 2) && (abs(y1 - y2) == 2)) {
+		int x = (x1 + x2) / 2;
+		int y = (y1 + y2) / 2;
+		if (currentMovementColor == "white") {
+			if ((gameState[x][y] == 'b') || (gameState[x][y] == 'B')) {
+				return true;
+			}
+		}
+		if (currentMovementColor == "black") {
+			if ((gameState[x][y] == 'w') || (gameState[x][y] == 'W')) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+bool Game::movementValidation(Movement *movement) {
+	/*//wrong color
+	if (!(((movement.getColor() == 'w') && (currentMovementColor == "white"))
+			|| ((movement.getColor() == 'b')
+					&& (currentMovementColor == "black")))) {
+		return false;
+	}
+	int size;
+	for (unsigned int i = 0; i < movement.getX().size(); i++) {
+		if (movement.getX()[i] > 0) {
+			size = i;
+		} else {
+			break;
+		}
+	}
+	//too few movements
+	if (size < 1) {
+		return false;
+	}
+
+	for (int i = 0; i <= size; i++) {
+		//no pawn on first field
+		if (i == 0) {
+			if (gameState[movement.getX()[i]][movement.getY()[i]] == '_') {
+				return false;
+			}
+		}
+		//field not available
+		if (i > 0) {
+			if (gameState[movement.getX()[i]][movement.getY()[i]] != '_') {
+				return false;
+			}
+		}
+		//field out of bounds
+		if ((movement.getX()[i] < 0) || (movement.getX()[i] > 7)) {
+			return false;
+		}
+		if ((movement.getY()[i] < 0) || (movement.getY()[i] > 7)) {
+			return false;
+		}
+	}
+	//if not king
+	if (gameState[movement.getX()[0]][movement.getY()[0]]
+			== movement.getColor()) {
+		//only one step in movement
+		if (size == 1) {
+			//white color
+			if (movement.getColor() == 'w') {
+				//if normal step
+				if ((abs(movement.getX()[1] - movement.getX()[0]) == 1)
+						&& ((movement.getX()[1] - movement.getX()[0]) == 1)) {
+					return true;
+				}
+			}
+			//black color
+			if (movement.getColor() == 'b') {
+				if ((abs(movement.getX()[1] - movement.getX()[0]) == 1)
+						&& ((movement.getX()[0] - movement.getX()[1]) == 1)) {
+					return true;
+				}
+			}
+		}
+		for (int i = 0; i < size; i++) {
+			if (!beatingValidation(movement.getX()[i], movement.getX()[i + 1],
+					movement.getY()[i], movement.getY()[i + 1])) {
+				return false;
+			}
+		}
+	} else {
+
+	}
+	*/
 	return true;
 }
 
-bool Game::move(Movement movement) {
+bool Game::move(Movement *movement) {
 	if (movementValidation(movement) == false) {
 		cout << "wrong movement";
 		return false;
 	}
-	if (movement.getMovementID() == "0") {
+	if (movement->getMovementID() == "0") {
 		endGame();
 		return true;
 	}
-	//execute move
-	int size = movement.getX().size();
-	for (int i = 0; i < size - 1; i++) {
-		removeBetween(movement.getX()[i], movement.getY()[i],
-				movement.getX()[i + 1], movement.getY()[i + 1]);
+	int size;
+	for (unsigned int i = 0; i < movement->getX().size(); i++) {
+		if (movement->getX()[i] > 0) {
+			size = i;
+		} else {
+			break;
+		}
 	}
-	gameState[movement.getX()[size - 1]][movement.getY()[size - 1]] =
-			gameState[movement.getX()[0]][movement.getY()[0]];
-	gameState[movement.getX()[0]][movement.getY()[0]] = '_';
+	//execute move
+	for (int i = 0; i < size; i++) {
+		if (movement->getX()[i + 1] != -1) {
+			removeBetween(movement->getX()[i], movement->getY()[i],
+					movement->getX()[i + 1], movement->getY()[i + 1]);
+		}
+	}
+	gameState[movement->getX()[size]][movement->getY()[size]] =
+			gameState[movement->getX()[0]][movement->getY()[0]];
+	gameState[movement->getX()[0]][movement->getY()[0]] = '_';
 
 	//king turn
-	if ((movement.getY()[size - 1] == 7) && (movement.getColor() == 'w')) {
-		gameState[movement.getX()[size - 1]][movement.getY()[size - 1]] = 'W';
+	if ((movement->getY()[size] == 7) && (movement->getColor() == 'w')) {
+		gameState[movement->getX()[size]][movement->getY()[size]] = 'W';
 	}
 
-	if ((movement.getY()[size - 1] == 0) && (movement.getColor() == 'b')) {
-		gameState[movement.getX()[size - 1]][movement.getY()[size - 1]] = 'B';
+	if ((movement->getY()[size] == 0) && (movement->getColor() == 'b')) {
+		gameState[movement->getX()[size]][movement->getY()[size]] = 'B';
 	}
 
 	if (currentMovementColor == "white") {

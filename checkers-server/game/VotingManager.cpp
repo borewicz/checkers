@@ -45,7 +45,7 @@ bool VotingManager::addMovement(Movement *movement) {
 	}
 }
 
-Movement VotingManager::getBestMove() {
+Movement* VotingManager::getBestMove() {
 	int maxCount = 0;
 	string maxID = "";
 	for (map<string, int>::iterator it = votesCount.begin();
@@ -56,9 +56,9 @@ Movement VotingManager::getBestMove() {
 		}
 	}
 	if (maxCount == 0) {
-		Movement movement = Movement();
+		Movement *movement = new Movement();
 		return movement;
 	}
-	Movement movement = *(votes[maxID]);
+	Movement *movement = votes[maxID];
 	return movement;
 }

@@ -32,7 +32,7 @@ boost::mutex serverMutex;
 int main() {
 	int port = 2137;
 	const char* host = "127.0.0.1";
-	int roundTime = 30;
+	int roundTime = 300;
 
 	Server *server = new Server(roundTime, port, host);
 	if (!server->startServer()) {
