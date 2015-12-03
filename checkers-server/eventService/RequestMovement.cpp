@@ -36,8 +36,8 @@ bool RequestMovement::action(Json::Value root, Server *server, Client *client) {
 	cout << "tablica" << endl;
 	Movement *movement = new Movement(movementIntArray, client->getColor(),
 			time);
-	memset(movement, 0, sizeof(Movement));
-	if (server->game->movementValidation(movement)) {//to do wyjebuje sie
+	//memset(movement, 0, sizeof(Movement)); //nie ruszać ma być zakomentowane
+	if (server->game->movementValidation(movement)) {//to bo wyjebuje sie
 		bool result = server->votingManager->addMovement(movement);
 		if (result) {
 			sendResponse(shortJson("status", "ok"), client);

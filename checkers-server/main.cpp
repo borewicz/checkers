@@ -34,10 +34,11 @@ int main(int argc, char* argv[]) {
 	const char* host = "127.0.0.1";
 	int roundTime = 30;
 
-	if (argc == 3) {
+	if (argc == 4) {
 		printf("Usage: %s m n filename\n", argv[0]);
-		port = atoi(argv[2]);
 		host = argv[1];
+		port = atoi(argv[2]);
+		roundTime = atoi(argv[3]);
 	}
 
 	Server *server = new Server(roundTime, port, host);
@@ -96,10 +97,14 @@ void runClientConnection(Client *client, Server *server) {
 
 	while ((server->serverON) and (run)) {
 		char buffer[BLOCK_SIZE];
-		client->getNetwork()->receive(buffer, BLOCK_SIZE);
-
+		bool result = client->getNetwork()->receive(buffer, BLOCK_SIZE);
 		cout << "message received" << endl;
-
+		//to do
+		if (result <= 0) {
+			requestManager->requestReaction("disconnect", server, client);
+			serverMutex.unlock();
+			break;
+		}
 		serverMutex.lock();
 		requestManager->requestReaction(string(buffer), server, client);
 		run = client->getThreadEnabled();
@@ -120,16 +125,25 @@ void runGame(Server *server) {
 	serverMutex.unlock();
 	cout << "game server run" << endl;
 	while (server->serverON) {
+		//tests
+		cout << "actual round time " << server->game->getActualRoundEndTime()
+				<< endl;
+		cout << "current movement color  "
+				<< server->game->getCurrentMovementColor() << endl;
+		server->game->drawGameBoard();
+
 		serverMutex.lock();
 		if (server->clients->clientsReadyToPlay()) {
 			if (server->game->getIsGameStarted()) {
-				server->game->move(server->votingManager->getBestMove());
-				requestBoard->sendBoard(server);
-				server->votingManager->nextVote(
-						server->game->getActualRoundEndTime(),
-						server->game->getCurrentMovementColor());
-				if (!server->game->getIsGameStarted()) {
-					continue;
+				if (server->votingManager->isSomeMove()) {
+					server->game->move(server->votingManager->getBestMove());
+					requestBoard->sendBoard(server);
+					server->votingManager->nextVote(
+							server->game->getActualRoundEndTime(),
+							server->game->getCurrentMovementColor());
+					if (!server->game->getIsGameStarted()) {
+						continue;
+					}
 				}
 			} else {
 				server->game->startGame();

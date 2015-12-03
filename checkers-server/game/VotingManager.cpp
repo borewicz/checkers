@@ -27,6 +27,13 @@ void VotingManager::nextVote(int gameID, string color) {
 }
 
 bool VotingManager::addMovement(Movement *movement) {
+	//test
+	cout<<"kolorki w dodawanym ruchu"<<endl;
+	cout<<"movement"<<endl;
+	cout<<movement->getColor()<<endl;
+	cout<<"currentColor"<<endl;
+	cout<<currentColor<<endl;
+
 	if (((movement->getColor() == 'w') && (currentColor == "white"))
 			|| ((movement->getColor() == 'b') && (currentColor == "black"))) {
 		if (movement->getRoundID() == actualGameID) {
@@ -39,8 +46,10 @@ bool VotingManager::addMovement(Movement *movement) {
 			}
 			return true;
 		}
+		cout << "zrypane roundID" << endl;
 		return false;
 	} else {
+		cout << "zrypane kolory w ruchu" << endl;
 		return false;
 	}
 }
@@ -61,4 +70,12 @@ Movement* VotingManager::getBestMove() {
 	}
 	Movement *movement = votes[maxID];
 	return movement;
+}
+
+bool VotingManager::isSomeMove() {
+	if (votes.empty()) {
+		return false;
+	} else {
+		return true;
+	}
 }

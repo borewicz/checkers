@@ -138,6 +138,8 @@ bool Game::movementValidation(Movement *movement) {
 }
 
 bool Game::move(Movement *movement) {
+	cout<<"move downloaded"<<endl;
+	cout<<"test if movement is good color display : "<<movement->getColor()<<endl;
 	if (movementValidation(movement) == false) {
 		cout << "wrong movement";
 		return false;
@@ -147,13 +149,15 @@ bool Game::move(Movement *movement) {
 		return true;
 	}
 	int size;
-	for (unsigned int i = 0; i < movement->getX().size(); i++) {
-		if (movement->getX()[i] > 0) {
+	for (int i = 0; i < movement->getX().size(); i++) {
+		cout<<movement->getX()[i];
+		if (movement->getX()[i] >= 0) {
 			size = i;
 		} else {
 			break;
 		}
 	}
+	cout<<"size of move "<<size<<endl;
 	//execute move
 	for (int i = 0; i < size; i++) {
 		if (movement->getX()[i + 1] != -1) {
