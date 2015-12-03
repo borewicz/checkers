@@ -89,6 +89,9 @@ void Widget::parseResponse()
                         json["nick"].toString() + ": " + json["message"].toString());
             else if (request_type == "board")
             {
+                time = json["time"].toInt();
+                ui->chatTextEdit->append("board_id: " + QString::number(time));
+                ui->chatTextEdit->append("Turn: " + json["current color"].toString());
                 ui->chatTextEdit->append("Loading board...");
                 for (int i = 0; i < 8; i++)
                 {
@@ -110,6 +113,21 @@ void Widget::parseResponse()
                 }
             }
         }
+        else if (json.contains("color"))
+        {
+            auto color = json["color"].toString();
+            isBlack = (color == "white") ? false : true;
+            ui->chatTextEdit->append("You are " + color);
+//            isBlack = json["colo"]
+        }
+        else if (json.contains("status"))
+        {
+            auto status = json["status"].toString();
+            if (status != "ok")
+            {
+                ui->chatTextEdit->append("Error: " + status);
+            }
+        }
     }
     catch (int e)
     {
@@ -129,9 +147,14 @@ void Widget::sendMessage()
 
 void Widget::sendMove()
 {
+    for (int i = moves.size(); i < 20; i++)
+    {
+        moves.append(-1);
+    }
     sendJSON(QJsonObject {
                  { "request", "movement" },
-                 { "time", QString::number(QDateTime::currentDateTime().toUTC().toTime_t()) },
+//                 { "time", (int)QDateTime::currentDateTime().toUTC().toTime_t() },
+                 { "time", time },
                  { "movement", moves }
              });
     for (int i = moves.size(); i > 0; i--)
@@ -142,6 +165,7 @@ void Widget::sendJSON(QJsonObject json)
 {
     if (sock) {
         QJsonDocument doc(json);
+        qDebug() << QString(doc.toJson(QJsonDocument::Compact)).toUtf8();
         sock->write(QString(doc.toJson(QJsonDocument::Compact)).toUtf8());
     }
 }
