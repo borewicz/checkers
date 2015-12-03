@@ -29,10 +29,16 @@ void runGame(Server *server);
 
 boost::mutex serverMutex;
 
-int main() {
+int main(int argc, char* argv[]) {
 	int port = 2137;
 	const char* host = "127.0.0.1";
-	int roundTime = 300;
+	int roundTime = 30;
+
+	if (argc == 3) {
+		printf("Usage: %s m n filename\n", argv[0]);
+		port = atoi(argv[2]);
+		host = argv[1];
+	}
 
 	Server *server = new Server(roundTime, port, host);
 	if (!server->startServer()) {
