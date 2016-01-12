@@ -6,6 +6,7 @@
  */
 
 #include "RequestMovement.h"
+#include <boost/lexical_cast.hpp>
 
 RequestMovement::RequestMovement() {
 }
@@ -20,7 +21,9 @@ bool RequestMovement::action(Json::Value root, Server *server, Client *client) {
 		return true;
 	}
 
-	int time = root.get("time", -1).asInt();
+	std:string timeStr = root.get("time", "").asString();
+	int time = boost::lexical_cast<int>(timeStr);
+
 	if (time == -1) {
 		cout << "Client movement error, no time" << endl;
 		return false;
