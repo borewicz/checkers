@@ -48,7 +48,9 @@ bool Game::endGame() {
 //it check only if there is one good pawn between two fields
 bool Game::beatingValidation(int sX, int sY, int dX, int dY) {
 
-	if ((abs(dX - sX) > 1) && (abs(dY - sY) > 1)) {
+	if (!((abs(dX - sX) > 1) && (abs(dY - sY) > 1))) {
+		return false;
+	} else {
 		/* int x = (x1 + x2) / 2;
 		 int y = (y1 + y2) / 2;
 
@@ -112,9 +114,10 @@ bool Game::beatingValidation(int sX, int sY, int dX, int dY) {
 		}
 		return true;
 	}
-	return false;
+	return true;
 }
 bool Game::movementValidation(Movement *movement) {
+	return true;
 	//wrong color
 	if (!(((movement->getColor() == 'w') && (currentMovementColor == "white"))
 			|| ((movement->getColor() == 'b')
@@ -173,8 +176,9 @@ bool Game::movementValidation(Movement *movement) {
 			//if not king
 			if (gameState[movement->getX()[0]][movement->getY()[0]]
 					== movement->getColor()) {
-				if ((abs(movement->getX()[i] - movement->getX()[i+1]) != 2)
-						|| (abs(movement->getY()[i] - movement->getY()[i+1]) != 2)) {
+				if ((abs(movement->getX()[i] - movement->getX()[i + 1]) != 2)
+						|| (abs(movement->getY()[i] - movement->getY()[i + 1])
+								!= 2)) {
 					return false;
 				}
 			}

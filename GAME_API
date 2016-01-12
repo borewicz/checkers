@@ -55,7 +55,7 @@ WYSYŁANIE WIADOMOŚCI
 
 {
 	"request" : "message",
-	"message" : "jp2gmd"
+	"message" : "wiadomość"
 }
 
 =======================
@@ -64,14 +64,16 @@ OTRZYMYWANIE WIADOMOŚCI
 
 {
 	"request" : "message",
-	"timestamp" : "14xxxxx",
+	"timestamp" : "1443452",
 	"nick" : "nick",
-	"message" : "guwno"
+	"message" : "wiadomość"
 }
 
 ==================
 ODBIERANIE PLANSZY
 ==================
+Damki kodowane są za pomocą wielkiej litery.
+
 {
    "board" : [
       [ "_", "b", "_", "b", "_", "b", "_", "b" ],
@@ -92,10 +94,12 @@ ODBIERANIE PLANSZY
 WYSYŁANIE RUCHU
 ===============
 a) request
+W "movement" przesyłane kolejno wartości X1,Y1,X2,Y2,...
+jeśli brak więcej ruchów to wypełniane -1
 {
 	"request" : "movement",
-	"time" : # timestamp + czas tury, (to co odebrane razem z planszą"
-	"movement" : [0,0,1,1,0,0,1,1,0,0,1,1,0,0,1,-1,-1,-1,-1,-1]
+	"time" : "123123 timestamp + czas tury, (to co odebrane razem z planszą"
+	"movement" : [0,0,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 }
 
 b) response

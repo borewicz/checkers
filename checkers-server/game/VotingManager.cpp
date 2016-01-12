@@ -28,29 +28,28 @@ void VotingManager::nextVote(int gameID, string color) {
 
 bool VotingManager::addMovement(Movement *movement) {
 	//test
-	cout<<"kolorki w dodawanym ruchu"<<endl;
-	cout<<"movement"<<endl;
-	cout<<movement->getColor()<<endl;
-	cout<<"currentColor"<<endl;
-	cout<<currentColor<<endl;
+	cout << "kolorki w dodawanym ruchu" << endl;
+	cout << "movement" << endl;
+	cout << movement->getColor() << endl;
+	cout << "currentColor" << endl;
+	cout << currentColor << endl;
 
-	if (((movement->getColor() == 'w') && (currentColor == "white"))
-			|| ((movement->getColor() == 'b') && (currentColor == "black"))) {
-		if (movement->getRoundID() == actualGameID) {
-			if (votes.count(movement->getMovementID()) == 0) {
-				votes[movement->getMovementID()] = movement;
-				votesCount[movement->getMovementID()] = 1;
-			} else {
-				votesCount[movement->getMovementID()]++;
-				delete movement;
-			}
-			return true;
-		}
-		cout << "zrypane roundID" << endl;
+	if (!(((movement->getColor() == 'w') && (currentColor == "white"))
+			|| ((movement->getColor() == 'b') && (currentColor == "black")))) {
 		return false;
 	} else {
-		cout << "zrypane kolory w ruchu" << endl;
-		return false;
+		if (movement->getRoundID() != actualGameID) {
+			return false;
+		} else {
+		}
+		if (votes.count(movement->getMovementID()) == 0) {
+			votes[movement->getMovementID()] = movement;
+			votesCount[movement->getMovementID()] = 1;
+		} else {
+			votesCount[movement->getMovementID()]++;
+			delete movement;
+		}
+		return true;
 	}
 }
 
