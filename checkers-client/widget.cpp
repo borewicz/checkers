@@ -44,8 +44,9 @@ void Widget::drawFields()
                         button->setIcon(QIcon());
                     int row, col, col_span, row_span;
                     ui->fieldsGridLayout->getItemPosition(index, &row, &col, &col_span, &row_span);
-                    moves.append(row);
                     moves.append(col);
+                    moves.append(abs(row - 7));
+                    qDebug() << col << " " << abs(row - 7);
                 }
             });
 			button->setAutoFillBackground(true);
@@ -79,6 +80,7 @@ void Widget::parseResponse()
     try
     {
         QString data = QString::fromUtf8(sock->readAll());
+        qDebug() << data;
         QJsonDocument d = QJsonDocument::fromJson(data.toUtf8());
         QJsonObject json = d.object();
         if (json.contains("request"))
