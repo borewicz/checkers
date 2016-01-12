@@ -23,7 +23,7 @@ public:
 private:
     Ui::Widget *ui;
     QTcpSocket *sock;
-    int time = 0;
+    QString time = "0";
     bool isBlack = false;
     void connectToServer();
     void sendMessage();

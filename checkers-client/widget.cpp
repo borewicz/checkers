@@ -77,63 +77,57 @@ void Widget::connectToServer()
 
 void Widget::parseResponse()
 {
-    try
+    QString data = QString::fromUtf8(sock->readAll());
+    qDebug() << data;
+    QJsonDocument d = QJsonDocument::fromJson(data.toUtf8());
+    QJsonObject json = d.object();
+    if (json.contains("request"))
     {
-        QString data = QString::fromUtf8(sock->readAll());
-        qDebug() << data;
-        QJsonDocument d = QJsonDocument::fromJson(data.toUtf8());
-        QJsonObject json = d.object();
-        if (json.contains("request"))
+        std::string request_type = json["request"].toString().toStdString();
+        if (request_type == "message")
+            ui->chatTextEdit->append("[" + json["timestamp"].toString() + "] " +
+                    json["nick"].toString() + ": " + json["message"].toString());
+        else if (request_type == "board")
         {
-            std::string request_type = json["request"].toString().toStdString();
-            if (request_type == "message")
-                ui->chatTextEdit->append("[" + json["timestamp"].toString() + "] " +
-                        json["nick"].toString() + ": " + json["message"].toString());
-            else if (request_type == "board")
+            time = json["time"].toString();
+//            qDebug() << json["time"];
+            ui->chatTextEdit->append("board_id: " + time);
+            ui->chatTextEdit->append("Turn: " + json["current color"].toString());
+            ui->chatTextEdit->append("Loading board...");
+            for (int i = 0; i < 8; i++)
             {
-                time = json["time"].toInt();
-                ui->chatTextEdit->append("board_id: " + QString::number(time));
-                ui->chatTextEdit->append("Turn: " + json["current color"].toString());
-                ui->chatTextEdit->append("Loading board...");
-                for (int i = 0; i < 8; i++)
+                for (int j = 0; j < 8; j++)
                 {
-                    for (int j = 0; j < 8; j++)
-                    {
-                        board[i][j] = json["board"].toArray()[i].toArray()[j].toString()[0].toLatin1();
+                    board[i][j] = json["board"].toArray()[i].toArray()[j].toString()[0].toLatin1();
 //                        drawFields();
-                        QPushButton *button = (QPushButton *)ui->fieldsGridLayout->itemAt(8*i+j)->widget();
-                        switch (board[i][j])
-                        {
-                            case 'w' : button->setIcon(QIcon(":/white.png")); // tymczasowe
-                                break;
-                            case 'b' : button->setIcon(QIcon(":/black.png"));
-                                   break;
-                            default:
-                                break;
-                        }
+                    QPushButton *button = (QPushButton *)ui->fieldsGridLayout->itemAt(8*i+j)->widget();
+                    switch (board[i][j])
+                    {
+                        case 'w' : button->setIcon(QIcon(":/white.png")); // tymczasowe
+                            break;
+                        case 'b' : button->setIcon(QIcon(":/black.png"));
+                               break;
+                        default:
+                            break;
                     }
                 }
             }
         }
-        else if (json.contains("color"))
-        {
-            auto color = json["color"].toString();
-            isBlack = (color == "white") ? false : true;
-            ui->chatTextEdit->append("You are " + color);
-//            isBlack = json["colo"]
-        }
-        else if (json.contains("status"))
-        {
-            auto status = json["status"].toString();
-            if (status != "ok")
-            {
-                ui->chatTextEdit->append("Error: " + status);
-            }
-        }
     }
-    catch (int e)
+    else if (json.contains("color"))
     {
-        ui->chatTextEdit->append("Error occured.");
+        auto color = json["color"].toString();
+        isBlack = (color == "white") ? false : true;
+        ui->chatTextEdit->append("You are " + color);
+//            isBlack = json["colo"]
+    }
+    else if (json.contains("status"))
+    {
+        auto status = json["status"].toString();
+        if (status != "ok")
+        {
+            ui->chatTextEdit->append("Error: " + status);
+        }
     }
 }
 
