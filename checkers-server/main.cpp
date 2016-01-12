@@ -101,6 +101,7 @@ void runClientConnection(Client *client, Server *server) {
 		cout << "message received" << endl;
 		//to do
 		if (result <= 0) {
+			serverMutex.lock();
 			requestManager->requestReaction("disconnect", server, client);
 			serverMutex.unlock();
 			break;

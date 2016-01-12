@@ -47,6 +47,7 @@ bool RequestManager::requestReaction(string request, Server *server,
 	if (!err) {
 		std::cout << "Failed to parse request "
 				<< reader.getFormattedErrorMessages();
+		requestServices["error"]->action(root,server,client);
 		return false;
 	}
 	std::string requestType;

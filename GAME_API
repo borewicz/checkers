@@ -108,4 +108,13 @@ b) response
 	"status" : "ok" # "wrong move"
 }
 
+================
+BŁĘDNE ZAPYTANIE
+================
+
+{
+	"status" : "request error"
+}
+
+
 itd.
