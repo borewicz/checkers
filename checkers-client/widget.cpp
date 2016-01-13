@@ -108,6 +108,7 @@ void Widget::parseResponse()
                         case 'b' : button->setIcon(QIcon(":/black.png"));
                                break;
                         default:
+                            button->setIcon(QIcon());
                             break;
                     }
                 }
