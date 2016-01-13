@@ -336,18 +336,9 @@ void Game::removeBetween(int sX, int sY, int dX, int dY) {
 	}
 }
 
-//bool Game::isGameFinished() {
-////	for (int y = 0; y < 10; y++) {
-////		for (int x = 0; x < 10; x++) {
-////			gameState[y][x] = '_';
-////		}
-////	}
-////	TODO or not don't know yet
-//	return false;
-//}
 
 bool Game::isRoundTimeEnd(){
-	if (getActualRoundEndTime()>time(NULL)){
+	if (getActualRoundEndTime()<time(NULL)){
 		return true;
 	}
 	return false;

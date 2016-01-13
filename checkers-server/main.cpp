@@ -128,7 +128,9 @@ void runGame(Server *server) {
 			if (server->clients->clientsReadyToPlay()) {
 				if (server->game->getIsGameStarted()) {
 					if (server->game->isRoundTimeEnd()) {
+						cout<<"endRoundTime"<<endl;
 						if (server->votingManager->isSomeMove()) {
+							cout<<"is move"<<endl;
 							server->movementExecute();
 							requestBoard->sendBoard(server);
 							if (server->game->isGameEnd()) {
@@ -137,12 +139,14 @@ void runGame(Server *server) {
 								//todo information for users
 							}
 						} else {
+							cout<<"no move"<<endl;
 							server->lossGame();
 							requestBoard->sendBoard(server);
 							//todo information for users
 						}
 					} else {
 						if (server->isEveryoneVoted()) {
+							cout<<"everyone Voted"<<endl;
 							server->movementExecute();
 							requestBoard->sendBoard(server);
 							if (server->game->isGameEnd()) {
