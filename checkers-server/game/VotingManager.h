@@ -25,6 +25,7 @@ public:
 	void nextVote(int gameID, string color);
 	Movement* getBestMove();
 	bool isSomeMove();
+	int getVotesNumber();
 };
 
 #endif /* GAME_VOTINGMANAGER_H_ */

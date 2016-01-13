@@ -33,9 +33,12 @@ public:
 public:
 	Server(int roundTime, int server_port, const char* addres);
 	virtual ~Server();
-
+	bool isEveryoneVoted();
 	bool startServer();
 	bool stopServer();
+	void lossGame();
+	void movementExecute();
+
 };
 
 #endif /* GAME_SERVER_H_ */

@@ -41,25 +41,37 @@ RequestManager::~RequestManager() {
 	}
 }
 
-bool RequestManager::requestReaction(string request, Server *server,
+int RequestManager::requestReaction(string request, Server *server,
 		Client *client) {
+	int result = -1; //parser error reaction
 	bool err = reader.parse(request, root);
 	if (!err) {
 		std::cout << "Failed to parse request "
 				<< reader.getFormattedErrorMessages();
-		requestServices["error"]->action(root,server,client);
-		return false;
+		requestServices["error"]->action(root, server, client);
+		return result;
 	}
-	std::string requestType;
-	if (root.isMember("request")) {
+	string requestType;
+	if (!root.isMember("request")) {
+		requestType = "error";
+		result = -2; //no request field
+	} else {
 		requestType = root.get("request", "error").asString();
+		//if undefined request type
 		if (requestServices.find(requestType) == requestServices.end()) {
 			requestType = "error";
 		}
-	} else {
-		requestType = "error";
+		if ((requestType == "movement") || (requestType == "connect")
+				|| (requestType == "disconnect")) {
+			result = 2; //request which wake up game
+		} else {
+			result = 1; //other request
+		}
+		err = requestServices[requestType]->action(root, server, client);
+		if (!err) {
+			result = 0;
+		}
 	}
-	err = requestServices[requestType]->action(root, server, client);
-	return err;
+	return result;
 }
 

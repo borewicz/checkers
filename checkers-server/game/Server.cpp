@@ -45,3 +45,28 @@ bool Server::startServer() {
 
 	return true;
 }
+
+bool Server::isEveryoneVoted() {
+	if (game->getCurrentMovementColor() == "black") {
+		if (votingManager->getVotesNumber()
+				== clients->getBlackClients().size())
+			return true;
+	} else {
+		if (votingManager->getVotesNumber()
+				== clients->getWhiteClients().size())
+			return true;
+	}
+	return false;
+}
+
+void Server::lossGame() {
+	game->endGame();
+	votingManager->nextVote(game->getActualRoundEndTime(),
+			game->getCurrentMovementColor());
+}
+
+void Server::movementExecute() {
+	game->move(votingManager->getBestMove());
+	votingManager->nextVote(game->getActualRoundEndTime(),
+			game->getCurrentMovementColor());
+}

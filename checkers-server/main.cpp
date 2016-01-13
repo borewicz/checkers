@@ -9,8 +9,11 @@
 
 #include <iostream>
 #include <string.h>
-#include <iostream>
 #include <atomic>
+#include <mutex>
+#include <condition_variable>
+#include <chrono>
+#include <ctime>
 
 #include "game/Server.h"
 #include "eventService/RequestManager.h"
@@ -27,7 +30,9 @@ void runClientAcceptor(Server *server);
 void runClientConnection(Client *client, Server *server);
 void runGame(Server *server);
 
-boost::mutex serverMutex;
+mutex serverMutex;
+mutex serverSleepMutex;
+condition_variable serverSleep;
 
 int main(int argc, char* argv[]) {
 	int port = 2137;
@@ -59,12 +64,14 @@ int main(int argc, char* argv[]) {
 	commandLine(server);
 
 	delete server;
+
+	return 0;
 }
 
 void commandLine(Server *server) {
 	string command;
 	while (true) {
-		cout << "Commands: start - start server\n stop - stop server\n";
+		cout << "Commands: start - start server\nstop - stop server\n";
 		cout << "exit - exit program\n ";
 		cin >> command;
 
@@ -76,94 +83,92 @@ void commandLine(Server *server) {
 
 void runClientAcceptor(Server *server) {
 	while (server->serverON) {
-		//clientAcceptor is used only here
 		Client *client = new Client(server->clientAcceptor->acceptConnection());
-		cout << "client " << client->getNick() << " connect" << endl;
-		serverMutex.lock();
+		cout << "client connect" << endl;
+		std::lock_guard<mutex> serverLock(serverMutex);
 		server->clients->addToRandomColor(client);
 		boost::shared_ptr<boost::thread> clientThread(
 				new boost::thread(runClientConnection, client, server));
 		server->threads[client->getID()] = clientThread;
-		serverMutex.unlock();
 	}
 }
 
 void runClientConnection(Client *client, Server *server) {
 	RequestManager *requestManager = new RequestManager();
 
-	serverMutex.lock();
-	bool run = client->getThreadEnabled();
-	serverMutex.unlock();
-
-	while ((server->serverON) and (run)) {
+	while ((server->serverON) and (client->getThreadEnabled())) {
 		char buffer[BLOCK_SIZE];
-		bool result = client->getNetwork()->receive(buffer, BLOCK_SIZE);
-		cout << "message received" << endl;
-		//to do
+		int result = client->getNetwork()->receive(buffer, BLOCK_SIZE);
 		if (result <= 0) {
-			serverMutex.lock();
+			std::lock_guard<mutex> serverLock(serverMutex);
 			requestManager->requestReaction("disconnect", server, client);
-			serverMutex.unlock();
 			break;
 		}
-		serverMutex.lock();
-		requestManager->requestReaction(string(buffer), server, client);
-		run = client->getThreadEnabled();
-		serverMutex.unlock();
+		std::lock_guard<mutex> serverLock(serverMutex);
+		result = requestManager->requestReaction(string(buffer), server,
+				client);
+		if (result == 2) {
+			serverSleep.notify_one();
+		}
 	}
 	delete requestManager;
-	serverMutex.lock();
+	std::lock_guard<mutex> serverLock(serverMutex);
 	server->threads.erase(client->getID());
 	server->clients->removeClient(client->getID());
 	delete client;
-	serverMutex.unlock();
 }
 
 void runGame(Server *server) {
 	RequestBoard *requestBoard = new RequestBoard();
-	serverMutex.lock();
-	int time = server->game->getRoundTime();
-	serverMutex.unlock();
 	cout << "game server run" << endl;
 	while (server->serverON) {
-		//tests
-		cout << "actual round time " << server->game->getActualRoundEndTime()
-				<< endl;
-		cout << "current movement color  "
-				<< server->game->getCurrentMovementColor() << endl;
-		server->game->drawGameBoard();
+		{
+			std::lock_guard<mutex> serverLock(serverMutex);
+			server->game->drawGameBoard();
+			if (server->clients->clientsReadyToPlay()) {
+				if (server->game->getIsGameStarted()) {
+					if (server->game->isRoundTimeEnd()) {
+						if (server->votingManager->isSomeMove()) {
+							server->movementExecute();
+							requestBoard->sendBoard(server);
+							if (server->game->isGameEnd()) {
+								server->lossGame();
+								requestBoard->sendBoard(server);
+								//todo information for users
+							}
+						} else {
+							server->lossGame();
+							requestBoard->sendBoard(server);
+							//todo information for users
+						}
+					} else {
+						if (server->isEveryoneVoted()) {
+							server->movementExecute();
+							requestBoard->sendBoard(server);
+							if (server->game->isGameEnd()) {
+								server->lossGame();
+								requestBoard->sendBoard(server);
+								//todo information for users
+							}
+						}
+					}
 
-		serverMutex.lock();
-		if (server->clients->clientsReadyToPlay()) {
-			if (server->game->getIsGameStarted()) {
-				if (server->votingManager->isSomeMove()) {
-					server->game->move(server->votingManager->getBestMove());
-					requestBoard->sendBoard(server);
+				} else {
+					server->game->startGame();
 					server->votingManager->nextVote(
 							server->game->getActualRoundEndTime(),
 							server->game->getCurrentMovementColor());
-					if (!server->game->getIsGameStarted()) {
-						continue;
-					}
+					requestBoard->sendBoard(server);
 				}
 			} else {
-				server->game->startGame();
-				server->votingManager->nextVote(
-						server->game->getActualRoundEndTime(),
-						server->game->getCurrentMovementColor());
-				requestBoard->sendBoard(server);
-			}
-		} else {
-			if (server->game->getIsGameStarted()) {
-				server->game->endGame();
-				server->votingManager->nextVote(
-						server->game->getActualRoundEndTime(),
-						server->game->getCurrentMovementColor());
+				if (server->game->getIsGameStarted()) {
+					server->lossGame();
+					requestBoard->sendBoard(server);
+				}
 			}
 		}
-		serverMutex.unlock();
-		cout << "sleep" << endl;
-		sleep(time);
+		std::unique_lock<std::mutex> sleepLock(serverSleepMutex);
+		serverSleep.wait_for(sleepLock, chrono::milliseconds(4000));
 	}
 	delete requestBoard;
 }

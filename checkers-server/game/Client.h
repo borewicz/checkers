@@ -10,6 +10,7 @@
 
 #include "../network/TCPClientConnection.h"
 #include <string.h>
+#include <atomic>
 
 using namespace std;
 
@@ -20,7 +21,7 @@ private:
 	char color;
 	string nick;
 	bool isConnected;
-	bool threadEnabled;
+	atomic<bool> threadEnabled;
 
 public:
 	Client(TCPClientConnection *network, char color, string nick);

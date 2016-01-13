@@ -44,7 +44,8 @@ bool TCPClientAcceptor::start() {
 	memset(&address, 0, sizeof(struct sockaddr));
 	address.sin_family = AF_INET;
 	address.sin_port = htons(port);
-	if (host.size() > 0) {
+
+	if (!host.empty()) {
 		inet_pton(PF_INET, host.c_str(), &(address.sin_addr));
 	} else {
 		address.sin_addr.s_addr = INADDR_ANY;

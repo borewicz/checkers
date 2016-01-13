@@ -34,6 +34,8 @@ public:
 	int getActualRoundEndTime();
 	bool getIsGameStarted();
 	string getCurrentMovementColor();
+	bool isGameEnd();
+	bool isRoundTimeEnd();
 
 private:
 	void resetBoard();

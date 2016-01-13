@@ -45,6 +45,25 @@ bool Game::endGame() {
 	resetBoard();
 	return true;
 }
+
+bool Game::isGameEnd() {
+	bool white = false;
+	bool black = false;
+	for (int i = 0; i < 8; i++)
+		for (int j = 0; j < 8; j++) {
+			if (gameState[i][j] == 'W')
+				white = true;
+			if (gameState[i][j] == 'w')
+				white = true;
+			if (gameState[i][j] == 'B')
+				black = true;
+			if (gameState[i][j] == 'b')
+				black = true;
+			if ((white)&&(black)) return false;
+		}
+	return true;
+}
+
 //it check only if there is one good pawn between two fields
 bool Game::beatingValidation(int sX, int sY, int dX, int dY) {
 
@@ -326,6 +345,13 @@ void Game::removeBetween(int sX, int sY, int dX, int dY) {
 ////	TODO or not don't know yet
 //	return false;
 //}
+
+bool Game::isRoundTimeEnd(){
+	if (getActualRoundEndTime()>time(NULL)){
+		return true;
+	}
+	return false;
+}
 
 boost::multi_array<char, 2> Game::getGameState() {
 	return gameState;

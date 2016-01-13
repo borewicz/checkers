@@ -21,13 +21,13 @@ bool RequestMovement::action(Json::Value root, Server *server, Client *client) {
 		return true;
 	}
 
-	std:string timeStr = root.get("time", "").asString();
-	int time = boost::lexical_cast<int>(timeStr);
+	string timeStr = root.get("time", "").asString();
 
-	if (time == -1) {
+	if (timeStr == "") {
 		cout << "Client movement error, no time" << endl;
 		return false;
 	}
+	int time = boost::lexical_cast<int>(timeStr);
 	cout << "time" << endl;
 
 	const Json::Value movementJsonArray = root["movement"];
@@ -39,8 +39,7 @@ bool RequestMovement::action(Json::Value root, Server *server, Client *client) {
 	cout << "tablica" << endl;
 	Movement *movement = new Movement(movementIntArray, client->getColor(),
 			time);
-	//memset(movement, 0, sizeof(Movement)); //nie ruszać ma być zakomentowane
-	if (server->game->movementValidation(movement)) {//to bo wyjebuje sie
+	if (server->game->movementValidation(movement)) {
 		bool result = server->votingManager->addMovement(movement);
 		if (result) {
 			sendResponse(shortJson("status", "ok"), client);

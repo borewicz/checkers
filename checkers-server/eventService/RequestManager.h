@@ -26,7 +26,7 @@ private:
 public:
 	RequestManager();
 	virtual ~RequestManager();
-	bool requestReaction(string request, Server *server, Client *client);
+	int requestReaction(string request, Server *server, Client *client);
 };
 
 #endif /* EVENTSERVICE_REQUESTMANAGER_H_ */

@@ -21,19 +21,16 @@ VotingManager::~VotingManager() {
 
 void VotingManager::nextVote(int gameID, string color) {
 	actualGameID = gameID;
+	for (map<string, Movement*>::iterator it = votes.begin(); it != votes.end();
+			++it) {
+		delete it->second;
+	}
 	votes.clear();
 	votesCount.clear();
 	currentColor = color;
 }
 
 bool VotingManager::addMovement(Movement *movement) {
-	//test
-	cout << "kolorki w dodawanym ruchu" << endl;
-	cout << "movement" << endl;
-	cout << movement->getColor() << endl;
-	cout << "currentColor" << endl;
-	cout << currentColor << endl;
-
 	if (!(((movement->getColor() == 'w') && (currentColor == "white"))
 			|| ((movement->getColor() == 'b') && (currentColor == "black")))) {
 		return false;
@@ -72,9 +69,14 @@ Movement* VotingManager::getBestMove() {
 }
 
 bool VotingManager::isSomeMove() {
-	if (votes.empty()) {
-		return false;
-	} else {
-		return true;
+	return !votes.empty();
+}
+
+int VotingManager::getVotesNumber() {
+	int sum=0;
+	for (map<string, int>::iterator it = votesCount.begin();
+			it != votesCount.end(); ++it) {
+		sum+=it->second;
 	}
+	return sum;
 }
