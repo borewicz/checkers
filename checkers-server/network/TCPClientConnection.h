@@ -26,8 +26,8 @@ public:
 
 	virtual ~TCPClientConnection();
 
-	ssize_t receive(char* buffer, size_t len);
-	ssize_t send(char* buffer, size_t len);
+	int receive(char* buffer, size_t len);
+	int send(char* buffer, size_t len);
 
     string getHost();
     int getPort();

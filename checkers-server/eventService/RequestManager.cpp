@@ -13,6 +13,7 @@
 #include "RequestMessage.h"
 #include "RequestDisconnect.h"
 #include "RequestMovement.h"
+#include <exception>
 
 #include "../jsonParser/json/json.h"
 #include "../game/Server.h"
@@ -44,33 +45,37 @@ RequestManager::~RequestManager() {
 int RequestManager::requestReaction(string request, Server *server,
 		Client *client) {
 	int result = -1; //parser error reaction
-	bool err = reader.parse(request, root);
-	if (!err) {
-		std::cout << "Failed to parse request "
-				<< reader.getFormattedErrorMessages();
-		requestServices["error"]->action(root, server, client);
-		return result;
-	}
-	string requestType;
-	if (!root.isMember("request")) {
-		requestType = "error";
-		result = -2; //no request field
-	} else {
-		requestType = root.get("request", "error").asString();
-		//if undefined request type
-		if (requestServices.find(requestType) == requestServices.end()) {
-			requestType = "error";
+	try {
+		bool err = reader.parse(request, root);
+		if (!err) {
+			std::cout << "Failed to parse request "
+			<< reader.getFormattedErrorMessages();
+			requestServices["error"]->action(root, server, client);
+			return result;
 		}
-		if ((requestType == "movement") || (requestType == "connect")
-				|| (requestType == "disconnect")) {
-			result = 2; //request which wake up game
+		string requestType;
+		if (!root.isMember("request")) {
+			requestType = "error";
+			result = -2; //no request field
 		} else {
-			result = 1; //other request
+			requestType = root.get("request", "error").asString();
+			//if undefined request type
+			if (requestServices.find(requestType) == requestServices.end()) {
+				requestType = "error";
+			}
+			if ((requestType == "movement") || (requestType == "connect")
+					|| (requestType == "disconnect")) {
+				result = 2; //request which wake up game
+			} else {
+				result = 1; //other request
+			}
 		}
 		err = requestServices[requestType]->action(root, server, client);
 		if (!err) {
 			result = 0;
 		}
+	} catch(exception& e) {
+		printf("jsoncpp exception probably\n");
 	}
 	return result;
 }

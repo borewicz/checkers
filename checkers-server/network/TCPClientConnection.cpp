@@ -11,6 +11,8 @@
 #include <unistd.h>
 #include <string.h>
 #include <arpa/inet.h>
+#include <stdexcept>
+#include <fcntl.h>
 
 TCPClientConnection::TCPClientConnection(int client_sock,
 		struct sockaddr_in* address) {
@@ -38,11 +40,25 @@ TCPClientConnection::~TCPClientConnection() {
 	close(sock);
 }
 
-ssize_t TCPClientConnection::receive(char* buffer, size_t len) {
-	return read(sock, buffer, len);
+int TCPClientConnection::receive(char* buffer, size_t len) {
+	char dataSize[4];
+	int receiveSize = recv(sock, dataSize, 4, MSG_WAITALL);
+	if (receiveSize <= 0)
+		return -1;
+	int size;
+	try {
+		size = std::stoi(dataSize);
+	} catch (std::invalid_argument& e) {
+		printf("invalid argument\n");
+		read(sock, buffer, len);
+		return -2;
+	}
+	printf("%i\n", size);
+	receiveSize = recv(sock, buffer, size, MSG_WAITALL);
+	return receiveSize;
 }
 
-ssize_t TCPClientConnection::send(char* buffer, size_t len) {
+int TCPClientConnection::send(char* buffer, size_t len) {
 	return write(sock, buffer, len);
 }
 

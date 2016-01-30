@@ -99,11 +99,18 @@ void runClientConnection(Client *client, Server *server) {
 	while ((server->serverON) and (client->getThreadEnabled())) {
 		char buffer[BLOCK_SIZE];
 		int result = client->getNetwork()->receive(buffer, BLOCK_SIZE);
-		if (result <= 0) {
+
+		if (result == -2) {
 			std::lock_guard<mutex> serverLock(serverMutex);
-			requestManager->requestReaction("disconnect", server, client);
+			requestManager->requestReaction("request error", server, client);
+			continue;
+		}
+		if (result == -1) {
+			std::lock_guard<mutex> serverLock(serverMutex);
+			requestManager->requestReaction("socket error", server, client);
 			break;
 		}
+
 		std::lock_guard<mutex> serverLock(serverMutex);
 		result = requestManager->requestReaction(string(buffer), server,
 				client);
@@ -128,9 +135,9 @@ void runGame(Server *server) {
 			if (server->clients->clientsReadyToPlay()) {
 				if (server->game->getIsGameStarted()) {
 					if (server->game->isRoundTimeEnd()) {
-						cout<<"endRoundTime"<<endl;
+						cout << "endRoundTime" << endl;
 						if (server->votingManager->isSomeMove()) {
-							cout<<"is move"<<endl;
+							cout << "is move" << endl;
 							server->movementExecute();
 							requestBoard->sendBoard(server);
 							if (server->game->isGameEnd()) {
@@ -139,14 +146,14 @@ void runGame(Server *server) {
 								//todo information for users
 							}
 						} else {
-							cout<<"no move"<<endl;
+							cout << "no move" << endl;
 							server->lossGame();
 							requestBoard->sendBoard(server);
 							//todo information for users
 						}
 					} else {
 						if (server->isEveryoneVoted()) {
-							cout<<"everyone Voted"<<endl;
+							cout << "everyone Voted" << endl;
 							server->movementExecute();
 							requestBoard->sendBoard(server);
 							if (server->game->isGameEnd()) {
@@ -172,7 +179,7 @@ void runGame(Server *server) {
 			}
 		}
 		std::unique_lock<std::mutex> sleepLock(serverSleepMutex);
-		serverSleep.wait_for(sleepLock, chrono::milliseconds(4000));
+		serverSleep.wait_for(sleepLock, chrono::milliseconds(100000));
 	}
 	delete requestBoard;
 }
