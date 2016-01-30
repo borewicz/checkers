@@ -43,8 +43,9 @@ TCPClientConnection::~TCPClientConnection() {
 int TCPClientConnection::receive(char* buffer, size_t len) {
 	char dataSize[4];
 	int receiveSize = recv(sock, dataSize, 4, MSG_WAITALL);
-	if (receiveSize <= 0)
+	if (receiveSize <= 0) {
 		return -1;
+	}
 	int size;
 	try {
 		size = std::stoi(dataSize);
@@ -53,7 +54,11 @@ int TCPClientConnection::receive(char* buffer, size_t len) {
 		read(sock, buffer, len);
 		return -2;
 	}
-	printf("%i\n", size);
+	if (size > len) {
+		printf("too big message \n");
+		read(sock, buffer, len);
+		return -2;
+	}
 	receiveSize = recv(sock, buffer, size, MSG_WAITALL);
 	return receiveSize;
 }
