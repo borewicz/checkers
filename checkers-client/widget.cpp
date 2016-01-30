@@ -162,7 +162,9 @@ void Widget::sendJSON(QJsonObject json)
 {
     if (sock) {
         QJsonDocument doc(json);
-        qDebug() << QString(doc.toJson(QJsonDocument::Compact)).toUtf8();
-        sock->write(QString(doc.toJson(QJsonDocument::Compact)).toUtf8());
+        QString body = doc.toJson(QJsonDocument::Compact);
+        QString size = QString::number(body.size()).rightJustified(4, '0');
+        qDebug() << size + body;
+        sock->write((size + body).toUtf8());
     }
 }
