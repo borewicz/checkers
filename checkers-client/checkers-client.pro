@@ -14,11 +14,18 @@ TARGET = checkers-client
 TEMPLATE = app
 
 SOURCES += main.cpp\
-        widget.cpp
+    connectwindow.cpp \
+    sock.cpp \
+    boardwindow.cpp
 
-HEADERS  += widget.h
+HEADERS  += \
+    sock.h \
+    connectwindow.h \
+    boardwindow.h
 
-FORMS    += widget.ui
+FORMS    += \
+    connectwindow.ui \
+    boardwindow.ui
 CONFIG += c++11
 
 RESOURCES += \
