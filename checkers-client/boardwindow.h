@@ -22,7 +22,7 @@ public:
     explicit BoardWindow(QWidget *parent = 0);
     ~BoardWindow();
     void setColor(QString color) {
-        isBlack = (color == "black") ? true : false;
+        colorId = (color == "black") ? true : false;
     }
 
 private:
@@ -35,7 +35,7 @@ private:
     // variables
     Ui::BoardWindow *ui;
     QString time = "0"; // act as board id
-    bool isBlack = false;
+    int colorId = 0; // 0 - white, 1 - black
     char board[8][8] = { { '_' } };
     QJsonArray moves; // it's ugly, but it works xD
 
@@ -50,6 +50,7 @@ private:
     void fieldClick();
     void sendMove();
     void updateLabel();
+    void lockFields();
 };
 
 #endif // WIDGET_H

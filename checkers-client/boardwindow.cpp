@@ -44,11 +44,16 @@ void BoardWindow::drawFields()
             connect(button, &QPushButton::clicked, [=]{
                 int index = ui->fieldsGridLayout->indexOf(button);
 
-                if(index != -1)
+                if (index != -1)
                 {
                     if (moves.size() % 4 == 2) {
                         QApplication::restoreOverrideCursor();
-                        button->setIcon(QIcon((this->isBlack ? BLACK_IMG : WHITE_IMG)));
+                        button->setIcon(QIcon((this->colorId ? BLACK_IMG : WHITE_IMG)));
+                        /* TODO
+                         * - własna funkcja (obudowa na setIcon)
+                         * - kopia boardu i na niej operowanie
+                         */
+                        //setFieldStatus(&button, (this->colorId ? BLACK_IMG : WHITE_IMG));
                     }
                     else {
                         QApplication::setOverrideCursor(Qt::WaitCursor);
@@ -58,8 +63,8 @@ void BoardWindow::drawFields()
 
                     int row, col, col_span, row_span;
                     ui->fieldsGridLayout->getItemPosition(index, &row, &col, &col_span, &row_span);
-                    moves.append(this->isBlack ? 7 - col : col);
-                    moves.append(this->isBlack ? row : 7 - row);
+                    moves.append(this->colorId ? 7 - col : col);
+                    moves.append(this->colorId ? row : 7 - row);
                     updateLabel();
                 }
             });
@@ -110,14 +115,16 @@ void BoardWindow::resetBoard()
 void BoardWindow::loadBoard()
 {
     int pos = 0;
-    for (int i = 0; i < 63; i++) {
-        pos = isBlack ? 63-i : i;
+    for (int i = 0; i < ui->fieldsGridLayout->count(); i++) {
+        pos = colorId ? (ui->fieldsGridLayout->count()-1)-i : i;
         QPushButton *button = (QPushButton *)ui->fieldsGridLayout->itemAt(pos)->widget();
         switch (board[i/8][i%8])
         {
             case 'w' : button->setIcon(QIcon(WHITE_IMG));
+//                (colorId) ? button->setEnabled(false) : button->setEnabled(true);
                 break;
             case 'b' : button->setIcon(QIcon(BLACK_IMG));
+//                (!colorId) ? button->setEnabled(false) : button->setEnabled(true);
                    break;
             default:
                 break;
@@ -146,6 +153,7 @@ void BoardWindow::parseResponse()
                 for (int j = 0; j < 8; j++)
                     board[i][j] = json["board"].toArray()[i].toArray()[j].toString()[0].toLatin1();
             loadBoard();
+            qDebug() << ui->fieldsGridLayout->count();
         }
     }
     else if (json.contains("status"))
@@ -153,6 +161,9 @@ void BoardWindow::parseResponse()
         auto status = json["status"].toString();
         if (status != "ok")
         {
+            if (status == "wrong move") {
+                revokeMoves();
+            }
             ui->chatTextEdit->append("Error: " + status);
         }
     }
