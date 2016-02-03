@@ -161,6 +161,34 @@ bool Game::movementValidation(Movement *movement) {
 			return false;
 		}
 	}
+	int size = 0;
+	//checking if fields free
+	for (unsigned int i = 1; i < movement->getX().size(); i++) {
+		if ((movement->getY()[i] < 0) || (movement->getX()[i] < 0)) {
+			break;
+		}
+		size = i;
+		if (gameState[movement->getX()[i]][movement->getY()[i]] != '_') {
+			cout << "field not empty" << endl;
+			return false;
+		}
+	}
+	//check if move forward
+	if (size == 1) {
+		if (gameState[movement->getX()[0]][movement->getY()[0]] == 'w') {
+			if (movement->getY()[1] <= movement->getY()[0]) {
+				cout << "move backward" << endl;
+				return false;
+			}
+		}
+		if (gameState[movement->getX()[0]][movement->getY()[0]] == 'b') {
+			if (movement->getY()[1] >= movement->getY()[0]) {
+				cout << "move backward" << endl;
+				return false;
+			}
+		}
+	}
+
 	return true;
 }
 
@@ -174,7 +202,7 @@ bool Game::move(Movement *movement) {
 		return false;
 	}
 
-	int size;
+	int size = 0;
 	for (unsigned int i = 0; i < movement->getX().size(); i++) {
 		if (movement->getX()[i] >= 0) {
 			size = i;
