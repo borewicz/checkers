@@ -59,7 +59,8 @@ bool Game::isGameEnd() {
 				black = true;
 			if (gameState[i][j] == 'b')
 				black = true;
-			if ((white)&&(black)) return false;
+			if ((white) && (black))
+				return false;
 		}
 	return true;
 }
@@ -136,98 +137,34 @@ bool Game::beatingValidation(int sX, int sY, int dX, int dY) {
 	return true;
 }
 bool Game::movementValidation(Movement *movement) {
-	return true;
-	//wrong color
-	if (!(((movement->getColor() == 'w') && (currentMovementColor == "white"))
-			|| ((movement->getColor() == 'b')
-					&& (currentMovementColor == "black")))) {
+	//color checking
+	if (movement->getColor() != getCurrentMovementColor()[0]) {
+		cout << "wrong movement color" << endl;
 		return false;
 	}
-	if (!(((gameState[movement->getX()[0]][movement->getY()[0]] == 'w')
-			|| (gameState[movement->getX()[0]][movement->getY()[0]] == 'W'))
-			&& (currentMovementColor == "white"))
-			|| (((gameState[movement->getX()[0]][movement->getY()[0]] == 'b')
-					|| (gameState[movement->getX()[0]][movement->getY()[0]]
-							== 'B')) && (currentMovementColor == "black"))) {
+	//first field checking
+	if (gameState[movement->getX()[0]][movement->getY()[0]] == '_') {
+		cout << "empty first field" << endl;
 		return false;
 	}
-	int size;
-	for (unsigned int i = 0; i < movement->getX().size(); i++) {
-		if (movement->getX()[i] > 0) {
-			size = i;
-		} else {
-			break;
-		}
-	}
-	//too few movements
-	if (size < 1) {
-		return false;
-	}
-	//if one move only
-	if (size == 1) {
-		int xLength = abs(movement->getX()[1] - movement->getX()[0]);
-		int ylength = abs(movement->getY()[1] - movement->getY()[0]);
-		//if beating
-		if ((xLength > 1) && (ylength > 1)) {
-			if (!beatingValidation(movement->getX()[0], movement->getY()[0],
-					movement->getX()[1], movement->getY()[1])) {
-				return false;
-			}
-			//if not king
-			if (gameState[movement->getX()[0]][movement->getY()[0]]
-					== movement->getColor()) {
-				if ((abs(movement->getX()[0] - movement->getX()[1]) != 2)
-						|| (abs(movement->getY()[0] - movement->getY()[1]) != 2)) {
-					return false;
-				}
-			}
-		} else {
-			if ((xLength != 1) || (ylength != 1)) {
-				return false;
-			}
-		}
-	} else {
-		for (int i = 0; i < size; i++) {
-			if (!beatingValidation(movement->getX()[i], movement->getY()[i],
-					movement->getX()[i + 1], movement->getY()[i + 1])) {
-				return false;
-			}
-			//if not king
-			if (gameState[movement->getX()[0]][movement->getY()[0]]
-					== movement->getColor()) {
-				if ((abs(movement->getX()[i] - movement->getX()[i + 1]) != 2)
-						|| (abs(movement->getY()[i] - movement->getY()[i + 1])
-								!= 2)) {
-					return false;
-				}
-			}
-		}
-
-	}
-
-	for (int i = 0; i <= size; i++) {
-		//field not available
-		if (i > 0) {
-			if (gameState[movement->getX()[i]][movement->getY()[i]] != '_') {
-				return false;
-			}
-		}
-		//field out of bounds
-		if ((movement->getX()[i] < 0) || (movement->getX()[i] > 7)) {
-			return false;
-		}
-		if ((movement->getY()[i] < 0) || (movement->getY()[i] > 7)) {
+	if (getCurrentMovementColor() == "white") {
+		if ((gameState[movement->getX()[0]][movement->getY()[0]] == 'B')
+				|| (gameState[movement->getX()[0]][movement->getY()[0]] == 'b')) {
+			cout << "wrong color of first pawn" << endl;
 			return false;
 		}
 	}
-
+	if (getCurrentMovementColor() == "black") {
+		if ((gameState[movement->getX()[0]][movement->getY()[0]] == 'W')
+				|| (gameState[movement->getX()[0]][movement->getY()[0]] == 'w')) {
+			cout << "wrong color of first pawn" << endl;
+			return false;
+		}
+	}
 	return true;
 }
 
 bool Game::move(Movement *movement) {
-	cout << "move downloaded" << endl;
-	cout << "test if movement is good color display : " << movement->getColor()
-			<< endl;
 	if (movement->getMovementID() == "0") {
 		endGame();
 		return true;
@@ -239,14 +176,12 @@ bool Game::move(Movement *movement) {
 
 	int size;
 	for (unsigned int i = 0; i < movement->getX().size(); i++) {
-		cout << movement->getX()[i];
 		if (movement->getX()[i] >= 0) {
 			size = i;
 		} else {
 			break;
 		}
 	}
-	cout << "size of move " << size << endl;
 //execute move
 	for (int i = 0; i < size; i++) {
 		if (movement->getX()[i + 1] != -1) {
@@ -336,9 +271,8 @@ void Game::removeBetween(int sX, int sY, int dX, int dY) {
 	}
 }
 
-
-bool Game::isRoundTimeEnd(){
-	if (getActualRoundEndTime()<time(NULL)){
+bool Game::isRoundTimeEnd() {
+	if (getActualRoundEndTime() < time(NULL)) {
 		return true;
 	}
 	return false;

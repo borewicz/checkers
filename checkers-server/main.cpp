@@ -84,7 +84,6 @@ void commandLine(Server *server) {
 void runClientAcceptor(Server *server) {
 	while (server->serverON) {
 		Client *client = new Client(server->clientAcceptor->acceptConnection());
-		cout << "client connect" << endl;
 		std::lock_guard<mutex> serverLock(serverMutex);
 		server->clients->addToRandomColor(client);
 		boost::shared_ptr<boost::thread> clientThread(

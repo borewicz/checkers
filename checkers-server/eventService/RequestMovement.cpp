@@ -15,7 +15,6 @@ RequestMovement::~RequestMovement() {
 }
 
 bool RequestMovement::action(Json::Value root, Server *server, Client *client) {
-	cout << "client " << client->getNick() << " connect" << endl;
 	if (!client->getIsConnected()) {
 		sendResponse(shortJson("status", "not connected"), client);
 		return true;
@@ -36,7 +35,6 @@ bool RequestMovement::action(Json::Value root, Server *server, Client *client) {
 	for (int i = 0; i < size; i++) {
 		movementIntArray[i] = movementJsonArray[i].asInt();
 	}
-	cout << "tablica" << endl;
 	Movement *movement = new Movement(movementIntArray, client->getColor(),
 			time);
 	if (server->game->movementValidation(movement)) {
