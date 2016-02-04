@@ -16,12 +16,14 @@ TEMPLATE = app
 SOURCES += main.cpp\
     connectwindow.cpp \
     sock.cpp \
-    boardwindow.cpp
+    boardwindow.cpp \
+    checkersfield.cpp
 
 HEADERS  += \
     sock.h \
     connectwindow.h \
-    boardwindow.h
+    boardwindow.h \
+    checkersfield.h
 
 FORMS    += \
     connectwindow.ui \

@@ -31,7 +31,7 @@
        <item>
         <widget class="QLabel" name="turnsLabel">
          <property name="text">
-          <string>No turns.</string>
+          <string>Waiting for opponent.</string>
          </property>
         </widget>
        </item>

@@ -4,6 +4,7 @@
 #include <QTcpSocket>
 #include <QJsonObject>
 #include <QJsonDocument>
+#include <QDataStream>
 
 class Socket:public QTcpSocket {
 

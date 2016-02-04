@@ -16,7 +16,7 @@ void Socket::sendJSON(QJsonObject json)
     if (Socket::getInstance()) {
         QJsonDocument doc(json);
         QString body = doc.toJson(QJsonDocument::Compact);
-        QString size = QString::number(body.size()).rightJustified(4, '0');
+        QString size = QString::number(body.toStdString().size()).rightJustified(4, '0');
         qDebug() << size + body;
         Socket::getInstance()->write((size + body).toUtf8());
     }
