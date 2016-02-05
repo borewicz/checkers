@@ -174,10 +174,10 @@ void BoardWindow::parseResponse()
 
 void BoardWindow::sendMessage()
 {
-    Socket::sendJSON(QJsonObject {
-                 { "request", "message" },
-                 { "message", ui->messegeLineEdit->text() }
-             });
+    QJsonObject sendMessageObject;
+    sendMessageObject["request"]="message";
+    sendMessageObject["message"]=ui->messegeLineEdit->text();
+    Socket::sendJSON(sendMessageObject);
 //    ui->chatTextEdit->append(ui->nickLineEdit->text() + ": " + ui->messegeLineEdit->text());
     ui->messegeLineEdit->clear();
 }
@@ -188,12 +188,12 @@ void BoardWindow::sendMove()
     {
         moves.append(-1);
     }
-    Socket::sendJSON(QJsonObject {
-                 { "request", "movement" },
-//                 { "time", (int)QDateTime::currentDateTime().toUTC().toTime_t() },
-                 { "time", time },
-                 { "movement", moves }
-             });
+    QJsonObject sendMoveObject;
+    sendMoveObject["request"]="movement";
+    sendMoveObject["time"]=time;
+    sendMoveObject["movement"]=moves;
+    Socket::sendJSON(sendMoveObject);
+
     while (!moves.empty())
         moves.removeLast();
     updateLabel();

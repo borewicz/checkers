@@ -25,10 +25,10 @@ ConnectWindow::~ConnectWindow()
 void ConnectWindow::connectToServer()
 {
     Socket::getInstance()->connectToHost(ui->serverEdit->text(), ui->portEdit->text().toInt());
-    Socket::sendJSON(QJsonObject {
-                 { "request", "connect" },
-                 { "nick", ui->nickEdit->text() }
-             });
+    QJsonObject sendedObject;
+    sendedObject["request"]="connect";
+    sendedObject["nick"]=ui->nickEdit->text();
+    Socket::sendJSON(sendedObject);
 }
 
 void ConnectWindow::checkConnection()
