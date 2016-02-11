@@ -46,7 +46,7 @@ int TCPClientConnection::receive(char* buffer, size_t len) {
 	if (receiveSize <= 0) {
 		return -1;
 	}
-	int size;
+	size_t size;
 	try {
 		size = std::stoi(dataSize);
 	} catch (std::invalid_argument& e) {
@@ -64,6 +64,7 @@ int TCPClientConnection::receive(char* buffer, size_t len) {
 }
 
 int TCPClientConnection::send(char* buffer, size_t len) {
+//	printf(buffer);
 	return write(sock, buffer, len);
 }
 

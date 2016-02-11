@@ -15,8 +15,12 @@ public:
 	RequestBoard();
 	virtual ~RequestBoard();
 
-	bool action(Json::Value root, Server *server, Client *client);
-	bool sendBoard(Server *server);
+	bool action(Json::Value root, Server *server, Client *client);bool sendBoard(
+			Server *server);bool gameOver(Server *server);bool gameOver(
+			Server *server, string winner);
+private:
+	bool sendGameOverRequest(Server *server, string winner);
+	bool sendRequests(Server *server, Json::Value json);
 };
 
 #endif /* EVENTSERVICE_REQUESTBOARD_H_ */

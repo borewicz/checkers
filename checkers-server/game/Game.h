@@ -36,6 +36,9 @@ public:
 	string getCurrentMovementColor();
 	bool isGameEnd();
 	bool isRoundTimeEnd();
+	string getWinnerColor();
+	string getOppositeColor(string color);
+
 
 private:
 	void resetBoard();

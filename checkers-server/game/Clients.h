@@ -26,7 +26,7 @@ public:
 	bool removeClient(int ID);
 	bool nickAvailable(string nick);
 	bool clientsReadyToPlay();
-
+	string getColorWithPlayers();
 	map<int, Client*> getWhiteClients();
 	map<int, Client*> getBlackClients();
 

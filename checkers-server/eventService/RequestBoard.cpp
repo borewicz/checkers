@@ -29,7 +29,7 @@ bool RequestBoard::sendBoard(Server *server) {
 		for (int j = 0; j < 8; j++) {
 			;
 			string text = "";
-			text+=gameState[j][i];
+			text += gameState[j][i];
 			array2.append(text);
 		}
 		array.append(array2);
@@ -41,6 +41,31 @@ bool RequestBoard::sendBoard(Server *server) {
 			server->game->getActualRoundEndTime());
 	json["current color"] = server->game->getCurrentMovementColor();
 
+	return sendRequests(server, json);
+}
+
+bool RequestBoard::gameOver(Server *server) {
+	if (server->game->isGameEnd()) {
+		string result = server->game->getWinnerColor();
+		if ((result == "white") || (result == "black")) {
+			return sendGameOverRequest(server, result);
+		}
+	}
+	return false;
+}
+
+bool RequestBoard::gameOver(Server *server, string winner) {
+	return sendGameOverRequest(server, winner);
+}
+
+bool RequestBoard::sendGameOverRequest(Server *server, string winner) {
+	Json::Value json;
+	json["request"] = "game_over";
+	json["winner"] = winner;
+	return sendRequests(server, json);
+}
+
+bool RequestBoard::sendRequests(Server *server, Json::Value json) {
 	for (auto const& iterator : server->clients->getBlackClients()) {
 		if (iterator.second->getIsConnected()) {
 			sendResponse(json, iterator.second);

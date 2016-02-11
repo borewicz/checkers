@@ -65,6 +65,34 @@ bool Game::isGameEnd() {
 	return true;
 }
 
+/*
+ * Winner based on the board state
+ */
+string Game::getWinnerColor(){
+	bool white = false;
+	bool black = false;
+	for (int i = 0; i < 8; i++)
+		for (int j = 0; j < 8; j++) {
+			if (gameState[i][j] == 'W')
+				white = true;
+			if (gameState[i][j] == 'w')
+				white = true;
+			if (gameState[i][j] == 'B')
+				black = true;
+			if (gameState[i][j] == 'b')
+				black = true;
+			if ((white) && (black))
+				return "game_in_progress";
+		}
+	if (white){
+		return "white";
+	}
+	if (black){
+		return "black";
+	}
+	return "no_winner";
+}
+
 //it check only if there is one good pawn between two fields
 bool Game::beatingValidation(int sX, int sY, int dX, int dY) {
 
@@ -297,6 +325,16 @@ void Game::removeBetween(int sX, int sY, int dX, int dY) {
 			y--;
 		}
 	}
+}
+
+string Game::getOppositeColor(string color){
+	if (color=="white"){
+		return "black";
+	}
+	if (color=="black"){
+		return "white";
+	}
+	return "unknown";
 }
 
 bool Game::isRoundTimeEnd() {

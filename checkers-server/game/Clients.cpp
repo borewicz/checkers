@@ -90,3 +90,16 @@ bool Clients::clientsReadyToPlay() {
 	}
 	return false;
 }
+
+string Clients::getColorWithPlayers(){
+	if ((!blackClients.empty())&&(!whiteClients.empty())){
+		return "both";
+	}
+	if (!blackClients.empty()){
+		return "black";
+	}
+	if (!whiteClients.empty()){
+		return "white";
+	}
+	return "none";
+}

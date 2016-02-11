@@ -130,7 +130,7 @@ void runGame(Server *server) {
 	while (server->serverON) {
 		{
 			std::lock_guard<mutex> serverLock(serverMutex);
-			server->game->drawGameBoard();
+//			server->game->drawGameBoard();
 			if (server->clients->clientsReadyToPlay()) {
 				if (server->game->getIsGameStarted()) {
 					if (server->game->isRoundTimeEnd()) {
@@ -140,15 +140,15 @@ void runGame(Server *server) {
 							server->movementExecute();
 							requestBoard->sendBoard(server);
 							if (server->game->isGameEnd()) {
+								requestBoard->gameOver(server);
 								server->lossGame();
-								requestBoard->sendBoard(server);
-								//todo information for users
 							}
 						} else {
 							cout << "no move" << endl;
+							requestBoard->gameOver(server,
+									server->game->getOppositeColor(
+											server->game->getCurrentMovementColor()));
 							server->lossGame();
-							requestBoard->sendBoard(server);
-							//todo information for users
 						}
 					} else {
 						if (server->isEveryoneVoted()) {
@@ -156,9 +156,8 @@ void runGame(Server *server) {
 							server->movementExecute();
 							requestBoard->sendBoard(server);
 							if (server->game->isGameEnd()) {
+								requestBoard->gameOver(server);
 								server->lossGame();
-								requestBoard->sendBoard(server);
-								//todo information for users
 							}
 						}
 					}
@@ -172,13 +171,14 @@ void runGame(Server *server) {
 				}
 			} else {
 				if (server->game->getIsGameStarted()) {
+					requestBoard->gameOver(server,
+							server->clients->getColorWithPlayers());
 					server->lossGame();
-					requestBoard->sendBoard(server);
 				}
 			}
 		}
 		std::unique_lock<std::mutex> sleepLock(serverSleepMutex);
-		serverSleep.wait_for(sleepLock, chrono::milliseconds(100000));
+		serverSleep.wait_for(sleepLock, chrono::milliseconds(4000));
 	}
 	delete requestBoard;
 }
