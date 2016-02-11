@@ -108,6 +108,16 @@ b) response
 	"status" : "ok" # "wrong move"
 }
 
+==========
+KONIEC GRY
+==========
+
+{
+	"request" : "game_over",	
+	"winner" : "white"  #"black"
+}
+
+
 ================
 BŁĘDNE ZAPYTANIE
 ================
