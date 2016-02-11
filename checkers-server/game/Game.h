@@ -44,6 +44,7 @@ private:
 	void resetBoard();
 	void removeBetween(int sX, int sY, int dX, int dY);
 	bool beatingValidation(int x1, int y1, int x2, int y2);
+	int jumpLength(int x1, int y1, int x2, int y2);
 };
 
 #endif /* GAME_GAME_H_ */

@@ -68,7 +68,7 @@ bool Game::isGameEnd() {
 /*
  * Winner based on the board state
  */
-string Game::getWinnerColor(){
+string Game::getWinnerColor() {
 	bool white = false;
 	bool black = false;
 	for (int i = 0; i < 8; i++)
@@ -84,16 +84,18 @@ string Game::getWinnerColor(){
 			if ((white) && (black))
 				return "game_in_progress";
 		}
-	if (white){
+	if (white) {
 		return "white";
 	}
-	if (black){
+	if (black) {
 		return "black";
 	}
 	return "no_winner";
 }
 
-//it check only if there is one good pawn between two fields
+/*
+ * it check only if there is one good pawn between two fields
+ */
 bool Game::beatingValidation(int sX, int sY, int dX, int dY) {
 
 	if (!((abs(dX - sX) > 1) && (abs(dY - sY) > 1))) {
@@ -164,6 +166,7 @@ bool Game::beatingValidation(int sX, int sY, int dX, int dY) {
 	}
 	return true;
 }
+
 bool Game::movementValidation(Movement *movement) {
 	//color checking
 	if (movement->getColor() != getCurrentMovementColor()[0]) {
@@ -189,7 +192,7 @@ bool Game::movementValidation(Movement *movement) {
 			return false;
 		}
 	}
-	int size = 0;
+	unsigned int size = 0;
 	//checking if fields free
 	for (unsigned int i = 1; i < movement->getX().size(); i++) {
 		if ((movement->getY()[i] < 0) || (movement->getX()[i] < 0)) {
@@ -201,8 +204,13 @@ bool Game::movementValidation(Movement *movement) {
 			return false;
 		}
 	}
+	if (size == 0) {
+		return false;
+	}
 	//check if move forward
-	if (size == 1) {
+	if ((size == 1)
+			&& (jumpLength(movement->getX()[0], movement->getY()[0],
+					movement->getX()[1], movement->getY()[1]) == 1)) {
 		if (gameState[movement->getX()[0]][movement->getY()[0]] == 'w') {
 			if (movement->getY()[1] <= movement->getY()[0]) {
 				cout << "move backward" << endl;
@@ -216,8 +224,59 @@ bool Game::movementValidation(Movement *movement) {
 			}
 		}
 	}
+	bool isKing = false;
+	if (gameState[movement->getX()[0]][movement->getY()[0]] <= 90) { //capital letters in ascii
+		isKing = true;
+	}
 
+	//check if jumpLength is ok
+	if (size > 1) {
+		for (unsigned int i = 0; i < size; i++) {
+			int jump = jumpLength(movement->getX()[i], movement->getY()[i],
+					movement->getX()[i + 1], movement->getY()[i + 1]);
+			if (!isKing) {
+				if (jump != 2) {
+					return false;
+				}
+			} else {
+				if (jump < 2) {
+					return false;
+				}
+			}
+			if (!beatingValidation(movement->getX()[i], movement->getY()[i],
+					movement->getX()[i + 1], movement->getY()[i + 1])) {
+				return false;
+			}
+		}
+	} else {
+		int jump = jumpLength(movement->getX()[0], movement->getY()[0],
+				movement->getX()[1], movement->getY()[1]);
+		if (!isKing) {
+			if ((jump > 2) || (jump < 1)) {
+				return false;
+			}
+		} else {
+			if (jump < 1) {
+				return false;
+			}
+		}
+		if (jump > 1) {
+			if (!beatingValidation(movement->getX()[0], movement->getY()[0],
+					movement->getX()[1], movement->getY()[1])) {
+				return false;
+			}
+		}
+	}
 	return true;
+}
+
+int Game::jumpLength(int x1, int y1, int x2, int y2) {
+	int x = abs(x1 - x2);
+	int y = abs(y1 - y2);
+	if (x == y) {
+		return x;
+	}
+	return -1;
 }
 
 bool Game::move(Movement *movement) {
@@ -327,11 +386,11 @@ void Game::removeBetween(int sX, int sY, int dX, int dY) {
 	}
 }
 
-string Game::getOppositeColor(string color){
-	if (color=="white"){
+string Game::getOppositeColor(string color) {
+	if (color == "white") {
 		return "black";
 	}
-	if (color=="black"){
+	if (color == "black") {
 		return "white";
 	}
 	return "unknown";
