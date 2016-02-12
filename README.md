@@ -15,20 +15,21 @@ Ponieważ projekt pisały dwie osoby, każdą część projektu kompiluje siię 
 ##### Serwer
 Ponieważ Pawlok używał ułomnego Eclipse'a, wynikowe Makefiles miały niewiele wspólnego z prawdziwymi i nie kompilowały się nigdzie poza komputerem Pawloka. Na szczęście od czego jest cmake?
 
-``sh
+```
 $ cd checkers-server
 $ cmake .
 $ make
-``
+```
 
 ##### Klient
 
 Tutaj sprawa jest prostsza - do Qt SDK dostajemy qmake'a:
 
-``sh
+```
+$ cd checkers-client
 $ qmake checkers-client.pro
 $ make
-``
+```
 
 ### Rozwój
 Chcesz pomóc? To spadaj, najwyżej zrób forka i elo, nie chcemy cię więcej widzieć.
