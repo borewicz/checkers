@@ -114,7 +114,7 @@ Mianowicie:
 ```
 {
 	"request" : "movement",
-	"time" : "123123 timestamp + czas tury, (to co odebrane razem z planszą"
+	"time" : "0700880774",
 	"movement" : [0,0,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1]
 }
 ```
@@ -140,7 +140,7 @@ Na powyższe requesty serwer zazwyczaj będzie nas zasypywał przeróżnymi stat
 Dostępne statusy:
  - *ok* - nic nie działa
  - *not available* - nick zajęty
- - *already connected* - jesteś już połączonyśmieszku, 13 wstrzałów w tył głowy czeka
+ - *already connected* - jesteś już połączony śmieszku, 13 strzałów w tył głowy czeka
  - *not connected* - jesteś niepołączony i nic nie zrobisz
  - *wrong move* - wysyłasz zły ruch
  - *request error* - coś się zepsuło i nie było mnie słychać
