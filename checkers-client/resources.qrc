@@ -4,5 +4,7 @@
         <file>white.png</file>
         <file>null_black.png</file>
         <file>null_white.png</file>
+        <file>black_crowded.png</file>
+        <file>white_crowded.png</file>
     </qresource>
 </RCC>

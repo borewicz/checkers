@@ -7,6 +7,7 @@
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QDateTime>
+#include <QMessageBox>
 
 #include "sock.h"
 #include "checkersfield.h"
@@ -32,7 +33,7 @@ private:
     char board[8][8] = { { '_' } };
     CheckersField *currentField = NULL, *selectedPawn = NULL;
     QJsonArray moves; // it's ugly, but it works xD
-    bool yourTurn;
+    bool yourTurn, waiting = false;
 
     // methods
     void connectToServer();

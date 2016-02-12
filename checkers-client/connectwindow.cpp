@@ -25,10 +25,10 @@ ConnectWindow::~ConnectWindow()
 void ConnectWindow::connectToServer()
 {
     Socket::getInstance()->connectToHost(ui->serverEdit->text(), ui->portEdit->text().toInt());
-    QJsonObject sendedObject;
-    sendedObject["request"]="connect";
-    sendedObject["nick"]=ui->nickEdit->text();
-    Socket::sendJSON(sendedObject);
+    QJsonObject requestJson;
+    requestJson["request"] = "connect";
+    requestJson["nick"] = ui->nickEdit->text();
+    Socket::sendJSON(requestJson);
 }
 
 void ConnectWindow::checkConnection()
@@ -40,6 +40,7 @@ void ConnectWindow::checkConnection()
         disconnect(Socket::getInstance(), &QTcpSocket::readyRead, this, &ConnectWindow::checkConnection);
         boardWindow = new BoardWindow();
         boardWindow->setColor(d.object()["color"].toString());
+        boardWindow->setWindowTitle("Hi, " + ui->nickEdit->text());
         boardWindow->show();
         this->hide();
     }
@@ -47,7 +48,7 @@ void ConnectWindow::checkConnection()
         QMessageBox msgBox;
         msgBox.setIcon(QMessageBox::Critical);
         msgBox.setText("Error: " + d.object()["status"].toString() + ".");
-        msgBox.show();
+        msgBox.exec();
     }
 }
 

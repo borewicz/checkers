@@ -13,14 +13,12 @@ BoardWindow::BoardWindow(QWidget *parent) : QWidget(parent), ui(new Ui::BoardWin
 
 BoardWindow::~BoardWindow()
 {
+    Socket::getInstance()->close();
 	delete ui;
 }
 
 void BoardWindow::drawFields()
 {
-//    while ( QWidget* w = ui->fieldsGridLayout->findChild<QWidget*>() )
-//        delete w;
-//    this->setWindowTitle("You are " + QString(isBlack ? "black" : "white"));
     bool isUsed = true;
     for (int i = 0; i < 8; i++)
 	{
@@ -38,13 +36,16 @@ void BoardWindow::drawFields()
 
 void BoardWindow::fieldClick(CheckersField *field)
 {
-    if ((!yourTurn) || (ui->fieldsGridLayout->indexOf(field) == -1)) {
-        qDebug() << "siki";
+    if ((!yourTurn) || (ui->fieldsGridLayout->indexOf(field) == -1) || (waiting)) {
+//        qDebug() << "siki";
         return;
     }
 
-    if (!selectedPawn)
+    if ((!selectedPawn) && (field->state() != FieldState::Free))
         selectedPawn = field;
+
+    int row, col, row_span, col_span;
+    ui->fieldsGridLayout->getItemPosition(ui->fieldsGridLayout->indexOf(field), &row, &col, &row_span, &col_span);
 
     if (currentField) {
         if ((field == currentField) || (field->state() != FieldState::Free))
@@ -54,6 +55,10 @@ void BoardWindow::fieldClick(CheckersField *field)
         field->setState(color == "black" ? FieldState::Black : FieldState::White);
         currentField = NULL;
         selectedPawn = field;
+        //TODO: to jest źle
+        if (!(field->crowded()) && (row == (color == "black" ? 0 : 8))) {
+            field->setCrowded(true);
+        }
     }
     else {
         if ((field->state() == FieldState::Free) ||
@@ -65,8 +70,6 @@ void BoardWindow::fieldClick(CheckersField *field)
         field->setState(FieldState::Free);
         currentField = field;
     }
-    int row, col, row_span, col_span;
-    ui->fieldsGridLayout->getItemPosition(ui->fieldsGridLayout->indexOf(field), &row, &col, &row_span, &col_span);
     moves.append(color == "black" ? 7 - col : col);
     moves.append(color == "black" ? row : 7 - row);
     updateLabel();
@@ -147,6 +150,7 @@ void BoardWindow::parseResponse()
         }
         else if (request_type == "board")
         {
+            waiting = false;
             resetBoard();
             time = json["time"].toString();
             ui->turnsLabel->setText("Turn: " + json["current color"].toString());
@@ -157,6 +161,16 @@ void BoardWindow::parseResponse()
                 for (int j = 0; j < 8; j++)
                     board[i][j] = json["board"].toArray()[i].toArray()[j].toString()[0].toLatin1();
             loadBoard();
+        }
+        else if (request_type == "game_over")
+        {
+            ui->chatTextEdit->append("GAME OVER!");
+            if (json["winner"] == color) {
+                ui->chatTextEdit->append("Congratulatons, you won!");
+            }
+            else {
+                ui->chatTextEdit->append("Unfortunately, you lost. Maybe next time?");
+            }
         }
     }
     else if (json.contains("status"))
@@ -174,10 +188,10 @@ void BoardWindow::parseResponse()
 
 void BoardWindow::sendMessage()
 {
-    QJsonObject sendMessageObject;
-    sendMessageObject["request"]="message";
-    sendMessageObject["message"]=ui->messegeLineEdit->text();
-    Socket::sendJSON(sendMessageObject);
+    QJsonObject messageJson;
+    messageJson["request"] = "message";
+    messageJson["message"] = ui->messegeLineEdit->text();
+    Socket::sendJSON(messageJson);
 //    ui->chatTextEdit->append(ui->nickLineEdit->text() + ": " + ui->messegeLineEdit->text());
     ui->messegeLineEdit->clear();
 }
@@ -197,8 +211,11 @@ void BoardWindow::sendMove()
     while (!moves.empty())
         moves.removeLast();
     updateLabel();
+    ui->turnsLabel->setText("Waiting...");
+    waiting = true;
 }
 
 void BoardWindow::setColor(QString color) {
     this->color = color;
 }
+
