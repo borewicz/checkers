@@ -41,7 +41,7 @@ void BoardWindow::fieldClick(CheckersField *field)
         return;
     }
 
-    if ((!selectedPawn) && (field->state() != FieldState::Free))
+    if ((!selectedPawn) && (field->state() == (color == "black" ? FieldState::Black : FieldState::White)))
         selectedPawn = field;
 
     int row, col, row_span, col_span;
@@ -62,9 +62,8 @@ void BoardWindow::fieldClick(CheckersField *field)
         selectedPawn = field;
     }
     else {
-        if ((field->state() == FieldState::Free) ||
-                (field->state() == (color != "black" ? FieldState::Black : FieldState::White)) ||
-                selectedPawn != field)
+        if ((field->state() != (color == "black" ? FieldState::Black : FieldState::White) ||
+                selectedPawn != field))
             return;
 
         QApplication::setOverrideCursor(Qt::WaitCursor);
