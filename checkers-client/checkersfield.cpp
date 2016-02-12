@@ -36,7 +36,7 @@ void CheckersField::setState(FieldState state)
 void CheckersField::setCrowded(bool isCrowded)
 {
     _crowded = isCrowded;
-    setState(this->_state);
+//    setState(this->_state);
 }
 
 bool CheckersField::crowded()

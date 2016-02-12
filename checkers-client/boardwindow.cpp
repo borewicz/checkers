@@ -52,13 +52,14 @@ void BoardWindow::fieldClick(CheckersField *field)
             return;
 
         QApplication::restoreOverrideCursor();
-        field->setState(color == "black" ? FieldState::Black : FieldState::White);
-        currentField = NULL;
-        selectedPawn = field;
-        //TODO: to jest źle
-        if (!(field->crowded()) && (row == (color == "black" ? 0 : 8))) {
+        if (currentField->crowded()) {
+            currentField->setCrowded(false);
             field->setCrowded(true);
         }
+        field->setState(color == "black" ? FieldState::Black : FieldState::White);
+
+        currentField = NULL;
+        selectedPawn = field;
     }
     else {
         if ((field->state() == FieldState::Free) ||
@@ -119,11 +120,16 @@ void BoardWindow::loadBoard()
     for (int i = 0; i < ui->fieldsGridLayout->count(); i++) {
         pos = color == "black" ? (ui->fieldsGridLayout->count()-1)-i : i;
         CheckersField *field = (CheckersField *)ui->fieldsGridLayout->itemAt(pos)->widget();
+        field->setCrowded(false);
         switch (board[i/8][i%8])
         {
+            case 'W' :
+                field->setCrowded(true);
             case 'w' :
                 field->setState(FieldState::White);
                 break;
+            case 'B' :
+                field->setCrowded(true);
             case 'b' :
                 field->setState(FieldState::Black);
                 break;
