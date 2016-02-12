@@ -31,7 +31,7 @@ $ qmake checkers-client.pro
 $ make
 ```
 
-##### API
+### API
 
 Z myślą dla tych, którzy chcieliby zrobić własny, mniej durny klient, serwer udostępnia swego rodzaju API. Są to JSONy, przez są one ładne i przyjemne.
 
@@ -150,4 +150,4 @@ Chcesz pomóc? To spadaj, najwyżej zrób forka i elo, nie chcemy cię więcej w
 
 
 ### Licencja
-Tbw na licencję.`
+Tbw na licencję.
