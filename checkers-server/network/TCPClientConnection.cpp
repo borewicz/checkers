@@ -13,6 +13,8 @@
 #include <arpa/inet.h>
 #include <stdexcept>
 #include <fcntl.h>
+#include <iomanip>
+#include <sstream>
 
 TCPClientConnection::TCPClientConnection(int client_sock,
 		struct sockaddr_in* address) {
@@ -47,7 +49,7 @@ int TCPClientConnection::receive(char* buffer, size_t len) {
 		return -1;
 	}
 	if (receiveSize == 0) {
-			return 0;
+		return 0;
 	}
 	size_t size;
 	try {
@@ -67,8 +69,12 @@ int TCPClientConnection::receive(char* buffer, size_t len) {
 }
 
 int TCPClientConnection::send(char* buffer, size_t len) {
-//	printf(buffer);
-	return write(sock, buffer, len);
+	std::ostringstream oss;
+	oss << std::setfill('0') << std::setw(4) << len;
+	char sendBuffer[len+4];
+	strcpy(sendBuffer,oss.str().c_str());
+	strcat(sendBuffer,buffer);
+	return write(sock, sendBuffer, len+4);
 }
 
 string TCPClientConnection::getHost() {
