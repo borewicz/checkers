@@ -109,6 +109,10 @@ void runClientConnection(Client *client, Server *server) {
 			requestManager->requestReaction("socket error", server, client);
 			break;
 		}
+		if (result == 0) {
+			cout<<"client disconnected"<<endl;
+			break;
+		}
 
 		std::lock_guard<mutex> serverLock(serverMutex);
 		result = requestManager->requestReaction(string(buffer), server,
@@ -134,9 +138,9 @@ void runGame(Server *server) {
 			if (server->clients->clientsReadyToPlay()) {
 				if (server->game->getIsGameStarted()) {
 					if (server->game->isRoundTimeEnd()) {
-						cout << "endRoundTime" << endl;
+//						cout << "endRoundTime" << endl;
 						if (server->votingManager->isSomeMove()) {
-							cout << "is move" << endl;
+//							cout << "is move" << endl;
 							server->movementExecute();
 							requestBoard->sendBoard(server);
 							if (server->game->isGameEnd()) {
@@ -152,7 +156,7 @@ void runGame(Server *server) {
 						}
 					} else {
 						if (server->isEveryoneVoted()) {
-							cout << "everyone Voted" << endl;
+//							cout << "everyone Voted" << endl;
 							server->movementExecute();
 							requestBoard->sendBoard(server);
 							if (server->game->isGameEnd()) {
@@ -167,6 +171,7 @@ void runGame(Server *server) {
 					server->votingManager->nextVote(
 							server->game->getActualRoundEndTime(),
 							server->game->getCurrentMovementColor());
+					sleep(1);
 					requestBoard->sendBoard(server);
 				}
 			} else {

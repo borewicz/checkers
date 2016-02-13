@@ -13,6 +13,7 @@
 #include "RequestMessage.h"
 #include "RequestDisconnect.h"
 #include "RequestMovement.h"
+#include "RequestBoard.h"
 #include <exception>
 
 #include "../jsonParser/json/json.h"
@@ -34,6 +35,9 @@ RequestManager::RequestManager() {
 
 	RequestService *requestMovement = new RequestMovement();
 	requestServices["movement"] = requestMovement;
+
+	RequestService *requestBoard = new RequestBoard();
+	requestServices["board"] = requestBoard;
 }
 
 RequestManager::~RequestManager() {
@@ -73,6 +77,11 @@ int RequestManager::requestReaction(string request, Server *server,
 		err = requestServices[requestType]->action(root, server, client);
 		if (!err) {
 			result = 0;
+		}
+		//send board after connect
+		if ((requestType=="connect")&&(server->game->getIsGameStarted())){
+			cout<<"new client connect and sent Board "<<endl;
+			requestServices["board"]->action(root, server, client);
 		}
 	} catch(exception& e) {
 		printf("jsoncpp exception probably\n");

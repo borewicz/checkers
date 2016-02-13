@@ -27,7 +27,6 @@ bool RequestMovement::action(Json::Value root, Server *server, Client *client) {
 		return false;
 	}
 	int time = boost::lexical_cast<int>(timeStr);
-	cout << "time" << endl;
 
 	const Json::Value movementJsonArray = root["movement"];
 	int size = movementJsonArray.size();

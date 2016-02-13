@@ -43,8 +43,11 @@ TCPClientConnection::~TCPClientConnection() {
 int TCPClientConnection::receive(char* buffer, size_t len) {
 	char dataSize[4];
 	int receiveSize = recv(sock, dataSize, 4, MSG_WAITALL);
-	if (receiveSize <= 0) {
+	if (receiveSize < 0) {
 		return -1;
+	}
+	if (receiveSize == 0) {
+			return 0;
 	}
 	size_t size;
 	try {

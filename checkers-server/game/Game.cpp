@@ -205,6 +205,7 @@ bool Game::movementValidation(Movement *movement) {
 		}
 	}
 	if (size == 0) {
+		cout<<"no move"<<endl;
 		return false;
 	}
 	//check if move forward
@@ -231,20 +232,25 @@ bool Game::movementValidation(Movement *movement) {
 
 	//check if jumpLength is ok
 	if (size > 1) {
-		for (unsigned int i = 0; i < size; i++) {
+		for (unsigned int i = 0; i < size; i+=2) {
 			int jump = jumpLength(movement->getX()[i], movement->getY()[i],
 					movement->getX()[i + 1], movement->getY()[i + 1]);
+			cout<<"i "<<i<<endl;
+			cout<<"jump length "<<jump<<endl;
 			if (!isKing) {
 				if (jump != 2) {
+					cout<<"wrong jump length !=2"<<endl;
 					return false;
 				}
 			} else {
 				if (jump < 2) {
+					cout<<"wrong jump length <2"<<endl;
 					return false;
 				}
 			}
 			if (!beatingValidation(movement->getX()[i], movement->getY()[i],
 					movement->getX()[i + 1], movement->getY()[i + 1])) {
+				cout<<"beating validation >1"<<endl;
 				return false;
 			}
 		}
@@ -253,16 +259,19 @@ bool Game::movementValidation(Movement *movement) {
 				movement->getX()[1], movement->getY()[1]);
 		if (!isKing) {
 			if ((jump > 2) || (jump < 1)) {
+				cout<<"wrong jump length not king"<<endl;
 				return false;
 			}
 		} else {
 			if (jump < 1) {
+				cout<<"wrong jump length king"<<endl;
 				return false;
 			}
 		}
 		if (jump > 1) {
 			if (!beatingValidation(movement->getX()[0], movement->getY()[0],
 					movement->getX()[1], movement->getY()[1])) {
+				cout<<"beating validation =1"<<endl;
 				return false;
 			}
 		}

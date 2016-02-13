@@ -21,6 +21,7 @@ public:
 private:
 	bool sendGameOverRequest(Server *server, string winner);
 	bool sendRequests(Server *server, Json::Value json);
+	Json::Value createBoardJson(Server *server);
 };
 
 #endif /* EVENTSERVICE_REQUESTBOARD_H_ */
