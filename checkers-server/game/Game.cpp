@@ -167,6 +167,50 @@ bool Game::beatingValidation(int sX, int sY, int dX, int dY) {
 	return true;
 }
 
+bool Game::kingMoveValidation(int sX, int sY, int dX, int dY) {
+	map<char, int> count;
+	count['W'] = 0;
+	count['w'] = 0;
+	count['b'] = 0;
+	count['B'] = 0;
+	count['_'] = 0;
+
+	if ((dX > sX) && (dY > sY)) {
+		int x = sX + 1, y = sY + 1;
+		while ((x != dX) && (y != dY)) {
+			count[gameState[x][y]]++;
+			x++;
+			y++;
+		}
+	} else if ((dX < sX) && (dY < sY)) {
+		int x = sX - 1, y = sY - 1;
+		while ((x != dX) && (y != dY)) {
+			count[gameState[x][y]]++;
+			x--;
+			y--;
+		}
+	} else if ((dX < sX) && (dY > sY)) {
+		int x = sX - 1, y = sY + 1;
+		while ((x != dX) && (y != dY)) {
+			count[gameState[x][y]]++;
+			x--;
+			y++;
+		}
+	} else if ((dX > sX) && (dY < sY)) {
+		int x = sX + 1, y = sY - 1;
+		while ((x != dX) && (y != dY)) {
+			count[gameState[x][y]]++;
+			x++;
+			y--;
+		}
+	}
+
+	if ((count['W'] + count['w'] + count['b'] + count['B']) > 0) {
+		return false;
+	}
+	return true;
+}
+
 bool Game::movementValidation(Movement *movement) {
 	//color checking
 	if (movement->getColor() != getCurrentMovementColor()[0]) {
@@ -205,7 +249,7 @@ bool Game::movementValidation(Movement *movement) {
 		}
 	}
 	if (size == 0) {
-		cout<<"no move"<<endl;
+		cout << "no move" << endl;
 		return false;
 	}
 	//check if move forward
@@ -232,25 +276,23 @@ bool Game::movementValidation(Movement *movement) {
 
 	//check if jumpLength is ok
 	if (size > 1) {
-		for (unsigned int i = 0; i < size; i+=2) {
+		for (unsigned int i = 0; i < size; i += 2) {
 			int jump = jumpLength(movement->getX()[i], movement->getY()[i],
 					movement->getX()[i + 1], movement->getY()[i + 1]);
-			cout<<"i "<<i<<endl;
-			cout<<"jump length "<<jump<<endl;
 			if (!isKing) {
 				if (jump != 2) {
-					cout<<"wrong jump length !=2"<<endl;
+					cout << "wrong jump length !=2" << endl;
 					return false;
 				}
 			} else {
 				if (jump < 2) {
-					cout<<"wrong jump length <2"<<endl;
+					cout << "wrong jump length <2" << endl;
 					return false;
 				}
 			}
 			if (!beatingValidation(movement->getX()[i], movement->getY()[i],
 					movement->getX()[i + 1], movement->getY()[i + 1])) {
-				cout<<"beating validation >1"<<endl;
+				cout << "beating validation >1" << endl;
 				return false;
 			}
 		}
@@ -259,22 +301,31 @@ bool Game::movementValidation(Movement *movement) {
 				movement->getX()[1], movement->getY()[1]);
 		if (!isKing) {
 			if ((jump > 2) || (jump < 1)) {
-				cout<<"wrong jump length not king"<<endl;
+				cout << "wrong jump length not king" << endl;
 				return false;
+			}
+			if (jump > 1) {
+				if (!beatingValidation(movement->getX()[0], movement->getY()[0],
+						movement->getX()[1], movement->getY()[1])) {
+					cout << "beating validation =1" << endl;
+					return false;
+				}
 			}
 		} else {
 			if (jump < 1) {
-				cout<<"wrong jump length king"<<endl;
+				cout << "wrong jump length king" << endl;
+				return false;
+			}
+			if ((!kingMoveValidation(movement->getX()[0], movement->getY()[0],
+					movement->getX()[1], movement->getY()[1]))
+					&& (!beatingValidation(movement->getX()[0],
+							movement->getY()[0], movement->getX()[1],
+							movement->getY()[1]))) {
+				cout << "king move validation =1" << endl;
 				return false;
 			}
 		}
-		if (jump > 1) {
-			if (!beatingValidation(movement->getX()[0], movement->getY()[0],
-					movement->getX()[1], movement->getY()[1])) {
-				cout<<"beating validation =1"<<endl;
-				return false;
-			}
-		}
+
 	}
 	return true;
 }

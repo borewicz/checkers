@@ -72,8 +72,8 @@ bool VotingManager::isSomeMove() {
 	return !votes.empty();
 }
 
-int VotingManager::getVotesNumber() {
-	int sum=0;
+unsigned int VotingManager::getVotesNumber() {
+	unsigned int sum=0;
 	for (map<string, int>::iterator it = votesCount.begin();
 			it != votesCount.end(); ++it) {
 		sum+=it->second;
