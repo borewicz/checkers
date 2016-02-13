@@ -184,6 +184,7 @@ void BoardWindow::parseResponse()
         if (status != "ok")
         {
             if (status == "wrong move") {
+                waiting = false;
                 revokeMoves();
             }
             ui->chatTextEdit->append("Error: " + status);
