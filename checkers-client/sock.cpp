@@ -11,6 +11,19 @@ QTcpSocket* Socket::getInstance()
     }
     return socket;
 }
+
+QString Socket::readData()
+{
+    QByteArray dataLength = getInstance()->read(4);
+    int length = QString(dataLength).toInt();
+    QByteArray data;
+    while (data.length() < length) {
+        data.append(getInstance()->read(1));
+    }
+    qDebug() << QString(data);
+    return QString(data);
+}
+
 void Socket::sendJSON(QJsonObject json)
 {
     if (Socket::getInstance()) {

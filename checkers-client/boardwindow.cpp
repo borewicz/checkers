@@ -140,8 +140,7 @@ void BoardWindow::loadBoard()
 
 void BoardWindow::parseResponse()
 {
-    QString data = QString::fromUtf8(Socket::getInstance()->readAll());
-    qDebug() << data;
+    QString data = Socket::readData();
     QJsonDocument d = QJsonDocument::fromJson(data.toUtf8());
     QJsonObject json = d.object();
     if (json.contains("request"))

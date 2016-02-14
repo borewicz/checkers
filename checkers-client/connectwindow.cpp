@@ -33,7 +33,8 @@ void ConnectWindow::connectToServer()
 
 void ConnectWindow::checkConnection()
 {
-    QString data = QString::fromUtf8(Socket::getInstance()->readAll());
+    QString data = Socket::readData();
+//    QString data = QString::fromUtf8(Socket::getInstance()->readAll());
     QJsonDocument d = QJsonDocument::fromJson(data.toUtf8());
 
     if (d.object().contains("color")) {

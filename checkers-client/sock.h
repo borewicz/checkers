@@ -14,6 +14,7 @@ private:
     Socket();
 public:    
     static QTcpSocket* getInstance();
+    static QString readData();
     static void sendJSON(QJsonObject json);
 };
 
