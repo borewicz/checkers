@@ -10,10 +10,10 @@ Niczym. Poza tym że paru ludzi ma jeden kolor i się głosuje na ruch. Nic odkr
 Serwer wymaga boosta, a klient - biblioteki Qt.
 
 ### Kompilacja
-Ponieważ projekt pisały dwie osoby, każdą część projektu kompiluje siię  zupełnie inny sposób. 
+Ponieważ projekt pisały dwie osoby, każdą część projektu kompiluje się w zupełnie inny sposób. 
 
 ##### Serwer
-Ponieważ Pawlok używał ułomnego Eclipse'a, wynikowe Makefiles miały niewiele wspólnego z prawdziwymi i nie kompilowały się nigdzie poza komputerem Pawloka. Na szczęście od czego jest cmake?
+Ponieważ Pawlok używał ułomnego Eclipse'a, generowane przez te ustrojstwo wynikowe Makefiles miały niewiele wspólnego z prawdziwymi i nie kompilowały się nigdzie poza jego komputerem. Jednak nie ma to jak plik cmake'a napisany z palca.
 
 ```
 $ cd checkers-server
@@ -22,7 +22,6 @@ $ make
 ```
 
 ##### Klient
-
 Tutaj sprawa jest prostsza - do Qt SDK dostajemy qmake'a:
 
 ```
@@ -30,9 +29,21 @@ $ cd checkers-client
 $ qmake checkers-client.pro
 $ make
 ```
+Oczywiście można było to przerobić na cmake'a - ale po co, skoro do kompilacji i tak wymaga to Qt SDK?
+
+### Uruchamianie
+Klient nie ma żadnych opcji, po prostu:
+```
+$ ./client
+```
+
+Serwer natomiast ma (jakąś tam) składnię:
+```
+$ ./server [address] [port] [turn_time]
+```
+Tłumaczyć za bardzo nie ma co.
 
 ### API
-
 Z myślą dla tych, którzy chcieliby zrobić własny, mniej durny klient, serwer udostępnia swego rodzaju API. Są to JSONy, przez są one ładne i przyjemne.
 
 ### Logowanie
@@ -49,7 +60,7 @@ Jak to zrobimy, to serwer zwróci nam kolor:
 	"color" : "white" # "black"
 }
 ```
-Przy statusie innym niż OK nie będzie koloru. Logiczne.
+Przy statusie innym niż OK nie będzie koloru. 
 
 A żeby się wylogować:
 
@@ -81,7 +92,6 @@ a odbierame tak:
 ```
 
 ### Plansza
-
 Damki oznacza się wielką literą. Owszem, wygląda to słabo, ale dalej będzie tylko gorzej.
 
 ```
@@ -103,7 +113,6 @@ Damki oznacza się wielką literą. Owszem, wygląda to słabo, ale dalej będzi
 ```
 
 ### Wysyłanie ruchu
-
 Ten request to jest jakaś porażka, zrobiona chyba wyłącznie po to, aby piszącemu serwer było łatwiej i przyjemniej, natomiast typ od klienta musiał się tak z tym bawić że nie mógł w spokoju polurkować. 
 
 Mianowicie: 
@@ -120,7 +129,6 @@ Mianowicie:
 ```
 
 ##### Koniec gry
-
 Jak już gra się skończy, to serwer wyśle nam to:
 ```
 {
@@ -129,7 +137,6 @@ Jak już gra się skończy, to serwer wyśle nam to:
 }
 ```
 ##### Statusy
-
 Na powyższe requesty serwer zazwyczaj będzie nas zasypywał przeróżnymi statusami. Mają one format:
 ```
 { 
@@ -148,6 +155,5 @@ Dostępne statusy:
 ### Rozwój
 Chcesz pomóc? To spadaj, najwyżej zrób forka i elo, nie chcemy cię więcej widzieć.
 
-
 ### Licencja
-Tbw na licencję.
+>tbw na licencję
