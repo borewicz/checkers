@@ -46,7 +46,7 @@ Tłumaczyć za bardzo nie ma co.
 ### API
 Z myślą dla tych, którzy chcieliby zrobić własny, mniej durny klient, serwer udostępnia swego rodzaju API. Są to JSONy, przez są one ładne i przyjemne.
 
-### Logowanie
+##### Logowanie
 ```
 {
 	"request" : "connect",
@@ -70,7 +70,7 @@ A żeby się wylogować:
 }
 ```
 
-### Wiadomości
+##### Wiadomości
 
 Wysyłamy tak...
 
@@ -91,7 +91,7 @@ a odbierame tak:
 }
 ```
 
-### Plansza
+##### Plansza
 Damki oznacza się wielką literą. Owszem, wygląda to słabo, ale dalej będzie tylko gorzej.
 
 ```
@@ -112,7 +112,7 @@ Damki oznacza się wielką literą. Owszem, wygląda to słabo, ale dalej będzi
 }
 ```
 
-### Wysyłanie ruchu
+##### Wysyłanie ruchu
 Ten request to jest jakaś porażka, zrobiona chyba wyłącznie po to, aby piszącemu serwer było łatwiej i przyjemniej, natomiast typ od klienta musiał się tak z tym bawić że nie mógł w spokoju polurkować. 
 
 Mianowicie: 
