@@ -17,8 +17,9 @@ QString Socket::readData()
     QByteArray dataLength = getInstance()->read(4);
     int length = QString(dataLength).toInt();
     QByteArray data;
+    data.append(getInstance()->read(length));
     while (data.length() < length) {
-        data.append(getInstance()->read(1));
+        data.append(getInstance()->read(length - data.length()));
     }
     qDebug() << QString(data);
     return QString(data);
