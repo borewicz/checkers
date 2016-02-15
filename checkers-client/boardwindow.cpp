@@ -141,6 +141,7 @@ void BoardWindow::loadBoard()
 
 void BoardWindow::getReady()
 {
+    //najbardziej żydowskie rozwiązanie jakiekolwiek mogło mi przyjść do głowy
     while (Socket::getInstance()->bytesAvailable() > 0)
         parseResponse();
 }

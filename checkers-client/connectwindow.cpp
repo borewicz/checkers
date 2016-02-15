@@ -10,6 +10,7 @@ ConnectWindow::ConnectWindow(QWidget *parent) :
     ui->nickEdit->setText("Anon" + QString::number(qrand() % 9999));
     ui->nickEdit->setFocus(Qt::OtherFocusReason);
     connect(ui->connectButton, &QPushButton::clicked, this, &ConnectWindow::connectToServer);
+    connect(ui->quitButton, &QPushButton::clicked, this, &ConnectWindow::quitApplication);
 
     connect(Socket::getInstance(), &QTcpSocket::readyRead, this, &ConnectWindow::checkConnection);
     connect(Socket::getInstance(),
@@ -59,4 +60,9 @@ void ConnectWindow::showSocketError()
     msgBox.setIcon(QMessageBox::Critical);
     msgBox.setText("Error occurred: " + Socket::getInstance()->errorString());
     msgBox.exec();
+}
+
+void ConnectWindow::quitApplication()
+{
+    QApplication::quit();
 }

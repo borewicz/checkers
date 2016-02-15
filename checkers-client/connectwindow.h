@@ -28,6 +28,7 @@ private:
     void connectToServer();
     void checkConnection();
     void showSocketError();
+    void quitApplication();
 };
 
 #endif // CONNECTWINDOW_H
