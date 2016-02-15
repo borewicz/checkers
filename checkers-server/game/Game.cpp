@@ -101,14 +101,6 @@ bool Game::beatingValidation(int sX, int sY, int dX, int dY) {
 	if (!((abs(dX - sX) > 1) && (abs(dY - sY) > 1))) {
 		return false;
 	} else {
-		/* int x = (x1 + x2) / 2;
-		 int y = (y1 + y2) / 2;
-
-		 }
-		 } else {
-
-		 }
-		 return false;*/
 		map<char, int> count;
 		count['W'] = 0;
 		count['w'] = 0;

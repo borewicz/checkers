@@ -15,7 +15,9 @@ QTcpSocket* Socket::getInstance()
 QString Socket::readData()
 {
     QByteArray dataLength = getInstance()->read(4);
+    qDebug() << QString(dataLength);
     int length = QString(dataLength).toInt();
+    qDebug() << length;
     QByteArray data;
     data.append(getInstance()->read(length));
     while (data.length() != length) {

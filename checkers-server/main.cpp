@@ -72,7 +72,7 @@ void commandLine(Server *server) {
 	string command;
 	while (true) {
 		cout << "Commands: start - start server\nstop - stop server\n";
-		cout << "exit - exit program\n ";
+		cout << "exit - exit program\n";
 		cin >> command;
 
 		if (command == "exit") {
@@ -130,7 +130,6 @@ void runClientConnection(Client *client, Server *server) {
 
 void runGame(Server *server) {
 	RequestBoard *requestBoard = new RequestBoard();
-	cout << "game server run" << endl;
 	while (server->serverON) {
 		{
 			std::lock_guard<mutex> serverLock(serverMutex);
@@ -138,9 +137,9 @@ void runGame(Server *server) {
 			if (server->clients->clientsReadyToPlay()) {
 				if (server->game->getIsGameStarted()) {
 					if (server->game->isRoundTimeEnd()) {
-//						cout << "endRoundTime" << endl;
+						cout << "endRoundTime" << endl;
 						if (server->votingManager->isSomeMove()) {
-//							cout << "is move" << endl;
+							cout << "is move" << endl;
 							server->movementExecute();
 							requestBoard->sendBoard(server);
 							if (server->game->isGameEnd()) {
@@ -156,7 +155,7 @@ void runGame(Server *server) {
 						}
 					} else {
 						if (server->isEveryoneVoted()) {
-//							cout << "everyone Voted" << endl;
+							cout << "everyone Voted" << endl;
 							server->movementExecute();
 							requestBoard->sendBoard(server);
 							if (server->game->isGameEnd()) {

@@ -42,7 +42,7 @@ bool RequestMovement::action(Json::Value root, Server *server, Client *client) {
 			sendResponse(shortJson("status", "ok"), client);
 			return true;
 		} else {
-			//to do what if addMovemment return false
+			cout<<"error in voting"<<endl;
 		}
 	}
 	sendResponse(shortJson("status", "wrong move"), client);
