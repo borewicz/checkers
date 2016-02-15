@@ -17,13 +17,31 @@
    <item row="0" column="0">
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <layout class="QGridLayout" name="fieldsGridLayout">
-       <property name="sizeConstraint">
-        <enum>QLayout::SetFixedSize</enum>
-       </property>
-       <property name="spacing">
-        <number>0</number>
-       </property>
+      <layout class="QHBoxLayout" name="mainLayout">
+       <item>
+        <spacer name="spacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </spacer>
+       </item>
+       <item>
+        <layout class="QGridLayout" name="fieldsGridLayout">
+         <property name="sizeConstraint">
+          <enum>QLayout::SetDefaultConstraint</enum>
+         </property>
+         <property name="spacing">
+          <number>0</number>
+         </property>
+        </layout>
+       </item>
+       <item>
+        <spacer name="spacer_2">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </spacer>
+       </item>
       </layout>
      </item>
      <item>
@@ -99,7 +117,6 @@
     </layout>
    </item>
   </layout>
-  <zorder></zorder>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
