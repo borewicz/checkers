@@ -39,6 +39,7 @@ private:
     void connectToServer();
     void sendMessage();
     void drawFields();
+    void getReady();
     void parseResponse();
     void resetBoard();
     void loadBoard();

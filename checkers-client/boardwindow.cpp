@@ -6,7 +6,8 @@ BoardWindow::BoardWindow(QWidget *parent) : QWidget(parent), ui(new Ui::BoardWin
 	ui->setupUi(this);
     connect(ui->messegeLineEdit, &QLineEdit::returnPressed, this, &BoardWindow::sendMessage);
     connect(ui->acceptButton, &QPushButton::clicked, this, &BoardWindow::sendMove);
-    connect(Socket::getInstance(), &QTcpSocket::readyRead, this, &BoardWindow::parseResponse);
+//    connect(Socket::getInstance(), &QTcpSocket::readyRead, this, &BoardWindow::parseResponse);
+    connect(Socket::getInstance(), &QTcpSocket::readyRead, this, &BoardWindow::getReady);
     connect(ui->revokeButton, &QPushButton::clicked, this, &BoardWindow::revokeMoves);
 	drawFields();
 }
@@ -136,6 +137,12 @@ void BoardWindow::loadBoard()
                 break;
         }
     }
+}
+
+void BoardWindow::getReady()
+{
+    while (Socket::getInstance()->bytesAvailable() > 0)
+        parseResponse();
 }
 
 void BoardWindow::parseResponse()
